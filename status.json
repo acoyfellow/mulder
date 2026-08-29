@@ -1,19 +1,20 @@
 {
   "state": "experimenting",
-  "iteration": 3,
+  "iteration": 4,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
     "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
     "The native call reached the unchanged fixture API and changed visible page state.",
     "An operation without x-webmcp-enabled true was absent from native discovery and the generated call route.",
-    "Inline injection fails under script-src self, while an external same-origin bootstrap preserves the policy and passes native discovery and invocation."
+    "An external same-origin bootstrap preserves script-src self and passes native discovery and invocation.",
+    "Cloudflare can generate a same-origin companion document for a JSON-only API, and that document can publish and call native tools."
   ],
   "falsified": [
-    "Inline script injection works on a page with script-src self."
+    "Inline script injection works on a page with script-src self.",
+    "A JSON API document can itself publish native WebMCP tools."
   ],
   "notProven": [
     "CSP policies that require a nonce or hash and do not allow self",
-    "A host model for APIs with no HTML document",
     "General OpenAPI schema support",
     "Credential custody",
     "Request fidelity beyond path and query GET",
@@ -23,6 +24,6 @@
     "Tool-count limits",
     "Edge denial before origin"
   ],
-  "currentExperiment": "02-api-without-document",
-  "nextAction": "Falsify or prove a host model for an API that serves JSON only and has no HTML document."
+  "currentExperiment": "03-schema-compatibility",
+  "nextAction": "Run a corpus of OpenAPI input schemas through native Chrome registration and discovery."
 }

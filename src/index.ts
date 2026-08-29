@@ -34,6 +34,10 @@ export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/__mulder" || url.pathname === "/__mulder/") {
+      const origin = new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "cache-control": "no-store" } });
+      return new HTMLRewriter().on("body", new BootstrapInjector('<script type="module" src="/__mulder/bootstrap.js"></script>')).transform(origin);
+    }
     if (url.pathname === "/__mulder/manifest") return Response.json({ tools });
     if (url.pathname === "/__mulder/bootstrap.js") {
       return new Response(webMcpBootstrapModule(tools), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
