@@ -4,7 +4,7 @@
 |---|---|---|---|
 | 01 | Content Security Policy | pass for `script-src 'self'` | Inline discovery failed; external same-origin bootstrap passed natively without changing CSP |
 | 02 | API with no HTML document | partial | JSON cannot publish tools; a generated same-origin companion document passed natively |
-| 03 | OpenAPI schema compatibility | unrun | Corpus matrix against native Chrome registration |
+| 03 | OpenAPI schema compatibility | proven with boundary | Ten shapes register and invoke; Chrome did not enforce tested constraints |
 | 04 | Credential custody | unrun | Authenticated origin call with no credential in page, tool input, or receipt |
 | 05 | Request fidelity | unrun | Path, query, header, JSON, multipart, and error cases match direct API calls |
 | 06 | Approval for writes | unrun | Read executes; write pauses; approval executes once; replay fails |

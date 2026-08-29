@@ -1,0 +1,174 @@
+{
+  "schema": "mulder.schema-compatibility.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "method": "one isolated native page per schema",
+  "cases": [
+    {
+      "label": "baseline-string-enum",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "7849D47DE0989D1A32C03D0C5ED875F6",
+      "status": "Completed",
+      "error": null,
+      "screenshot": {
+        "path": "experiments/03-schema-compatibility/native.png",
+        "sha256": "7a9fe0ca091c6e89c6eec3692627aa4c1b0df6deea676ed108239c87fe785ed6"
+      }
+    },
+    {
+      "label": "integer-range",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "907E9D6D09CA97A6F4ABAD00CDA558AF",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "boolean-flag",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "24FA19EA8158AE159BA2EE4EDEF5D369",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "number-float",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "487C47FA46B71251306B9273ABB42954",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "array-of-strings",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "FF1F317F2EA7F1E13B4FA997148AA03F",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "nested-object",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "2197CE1394B09A5D12BFED067D839FA8",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "string-pattern",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "4CB11389697A95A909CB60F53EA751C7",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "nullable-union",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "2BDBF638A8B7E9AA6349C61B3CD25DAA",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "oneof-composition",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "EEC681D1FA637D6CD8FD0B55F536C642",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    },
+    {
+      "label": "unresolved-ref",
+      "registered": true,
+      "discovered": true,
+      "invoked": true,
+      "invocationId": "3A3F2D6E7E1C151B8BF664D0A4686E17",
+      "status": "Completed",
+      "error": null,
+      "screenshot": null
+    }
+  ],
+  "screenshot": {
+    "path": "experiments/03-schema-compatibility/native.png",
+    "sha256": "7a9fe0ca091c6e89c6eec3692627aa4c1b0df6deea676ed108239c87fe785ed6"
+  },
+  "verdict": "chrome-accepts-all-ten-shapes",
+  "invalidInputChecks": [
+    {
+      "label": "integer-range",
+      "input": {
+        "value": 101
+      },
+      "rejected": false,
+      "status": "Completed",
+      "output": {
+        "label": "integer-range",
+        "input": {
+          "value": 101
+        }
+      }
+    },
+    {
+      "label": "string-pattern",
+      "input": {
+        "code": "us"
+      },
+      "rejected": false,
+      "status": "Completed",
+      "output": {
+        "label": "string-pattern",
+        "input": {
+          "code": "us"
+        }
+      }
+    },
+    {
+      "label": "oneof-composition",
+      "input": {
+        "value": true
+      },
+      "rejected": false,
+      "status": "Completed",
+      "output": {
+        "label": "oneof-composition",
+        "input": {
+          "value": true
+        }
+      }
+    },
+    {
+      "label": "unresolved-ref",
+      "input": {
+        "city": 123
+      },
+      "rejected": false,
+      "status": "Completed",
+      "output": {
+        "label": "unresolved-ref",
+        "input": {
+          "city": 123
+        }
+      }
+    }
+  ],
+  "validationVerdict": "chrome-does-not-enforce-all-tested-constraints"
+}

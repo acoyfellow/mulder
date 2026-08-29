@@ -1,6 +1,7 @@
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { buildRequest, generateTools } from "./openapi";
+import { schemaExperimentModule, schemaExperimentPage } from "./schema-experiment";
 
 const tools = generateTools(fixtureDocument);
 const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
@@ -34,6 +35,8 @@ export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/schema") return new Response(schemaExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
+    if (url.pathname === "/experiments/schema/module.js") return new Response(schemaExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/__mulder" || url.pathname === "/__mulder/") {
       const origin = new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "cache-control": "no-store" } });
       return new HTMLRewriter().on("body", new BootstrapInjector('<script type="module" src="/__mulder/bootstrap.js"></script>')).transform(origin);
