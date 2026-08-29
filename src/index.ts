@@ -1,8 +1,9 @@
-import { webMcpBootstrap } from "./bootstrap";
+import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { buildRequest, generateTools } from "./openapi";
 
 const tools = generateTools(fixtureDocument);
+const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
 
 class BootstrapInjector {
   constructor(private readonly source: string) {}
@@ -34,11 +35,22 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
     if (url.pathname === "/__mulder/manifest") return Response.json({ tools });
+    if (url.pathname === "/__mulder/bootstrap.js") {
+      return new Response(webMcpBootstrapModule(tools), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    }
     if (url.pathname.startsWith("/__mulder/call/") && request.method === "POST") {
       return callGeneratedTool(request, decodeURIComponent(url.pathname.slice("/__mulder/call/".length)));
     }
     if (url.pathname.startsWith("/api/")) return fixtureApi(request);
     if (url.pathname === "/origin") return new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8" } });
+    if (url.pathname === "/experiments/csp/inline" || url.pathname === "/experiments/csp/external") {
+      const headers = { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "cache-control": "no-store" };
+      const origin = new Response(fixturePage(), { headers });
+      const injection = url.pathname.endsWith("/external")
+        ? '<script type="module" src="/__mulder/bootstrap.js"></script>'
+        : webMcpBootstrap(tools);
+      return new HTMLRewriter().on("body", new BootstrapInjector(injection)).transform(origin);
+    }
     if (url.pathname === "/") {
       const origin = new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
       return new HTMLRewriter().on("body", new BootstrapInjector(webMcpBootstrap(tools))).transform(origin);

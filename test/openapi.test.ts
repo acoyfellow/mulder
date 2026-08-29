@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { webMcpBootstrap } from "../src/bootstrap";
+import { webMcpBootstrap, webMcpBootstrapModule } from "../src/bootstrap";
 import { fixtureDocument } from "../src/fixture";
 import { buildRequest, generateTools } from "../src/openapi";
 
@@ -22,6 +22,7 @@ describe("OpenAPI to WebMCP", () => {
     expect(source).toContain("context.registerTool");
     expect(source).toContain("get_weather");
     expect(source).not.toContain("erase_weather");
+    expect(webMcpBootstrapModule(generateTools(fixtureDocument))).not.toContain("<script");
   });
 
   test("fails closed when an enabled operation has no stable name", () => {

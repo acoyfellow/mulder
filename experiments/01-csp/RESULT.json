@@ -1,0 +1,52 @@
+{
+  "schema": "mulder.csp.v0",
+  "policy": "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'",
+  "inline": {
+    "discovered": [],
+    "failedClosed": true,
+    "error": "Error: event timeout WebMCP.toolsAdded"
+  },
+  "external": {
+    "browser": "Chrome/151.0.7922.34",
+    "tools": [
+      "get_weather"
+    ],
+    "call": {
+      "invocationId": "688767E522FFB7B134B92513EE56A892",
+      "invoked": {
+        "toolName": "get_weather",
+        "frameId": "14812661360FCA20C8B087B4DBC8FAC7",
+        "invocationId": "688767E522FFB7B134B92513EE56A892",
+        "input": "{\"city\":\"Reykjavik\",\"units\":\"celsius\"}"
+      },
+      "responded": {
+        "invocationId": "688767E522FFB7B134B92513EE56A892",
+        "status": "Completed",
+        "output": {
+          "status": 200,
+          "body": {
+            "city": "Reykjavik",
+            "units": "celsius",
+            "temperature": 19,
+            "source": "unchanged-fixture-api"
+          }
+        }
+      },
+      "output": {
+        "status": 200,
+        "body": {
+          "city": "Reykjavik",
+          "units": "celsius",
+          "temperature": 19,
+          "source": "unchanged-fixture-api"
+        }
+      }
+    },
+    "visible": "{\n  \"tool\": \"get_weather\",\n  \"status\": 200,\n  \"body\": {\n    \"city\": \"Reykjavik\",\n    \"units\": \"celsius\",\n    \"temperature\": 19,\n    \"source\": \"unchanged-fixture-api\"\n  }\n}",
+    "screenshot": {
+      "path": "experiments/01-csp/external.png",
+      "sha256": "4fe222fd6b24ef13d3ded31d7793eced99634ec1bc8b87256d7a8031be2310e3"
+    }
+  },
+  "verdict": "pass-for-self-policy"
+}

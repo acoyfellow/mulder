@@ -1,10 +1,9 @@
 import type { GeneratedTool } from "./openapi";
 
-export function webMcpBootstrap(tools: GeneratedTool[]): string {
+export function webMcpBootstrapModule(tools: GeneratedTool[]): string {
   const descriptors = tools.map(({ name, description, inputSchema, annotations }) => ({ name, description, inputSchema, annotations }));
   const serialized = JSON.stringify(descriptors).replace(/</g, "\\u003c");
-  return `<script type="module">
-const descriptors=${serialized};
+  return `const descriptors=${serialized};
 const context=document.modelContext??navigator.modelContext;
 const output=document.querySelector('#mulder-result');
 if(context){
@@ -19,6 +18,9 @@ if(context){
       }
     });
   }
+}`;
 }
-</script>`;
+
+export function webMcpBootstrap(tools: GeneratedTool[]): string {
+  return `<script type="module">${webMcpBootstrapModule(tools)}</script>`;
 }

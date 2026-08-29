@@ -1,0 +1,28 @@
+{
+  "state": "experimenting",
+  "iteration": 3,
+  "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
+  "proven": [
+    "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
+    "The native call reached the unchanged fixture API and changed visible page state.",
+    "An operation without x-webmcp-enabled true was absent from native discovery and the generated call route.",
+    "Inline injection fails under script-src self, while an external same-origin bootstrap preserves the policy and passes native discovery and invocation."
+  ],
+  "falsified": [
+    "Inline script injection works on a page with script-src self."
+  ],
+  "notProven": [
+    "CSP policies that require a nonce or hash and do not allow self",
+    "A host model for APIs with no HTML document",
+    "General OpenAPI schema support",
+    "Credential custody",
+    "Request fidelity beyond path and query GET",
+    "Approval for writes",
+    "Distinct human and agent identity",
+    "Specification drift",
+    "Tool-count limits",
+    "Edge denial before origin"
+  ],
+  "currentExperiment": "02-api-without-document",
+  "nextAction": "Falsify or prove a host model for an API that serves JSON only and has no HTML document."
+}
