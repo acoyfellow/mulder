@@ -3,7 +3,7 @@
   {"id":"02-api-without-document","state":"partial","receipt":"experiments/02-api-without-document/RESULT.json","verifier":"experiments/02-api-without-document/verify.mjs"},
   {"id":"03-schema-compatibility","state":"proven","receipt":"experiments/03-schema-compatibility/RESULT.json","verifier":"experiments/03-schema-compatibility/verify.mjs"},
   {"id":"04-credential-custody","state":"proven","receipt":"experiments/04-credential-custody/RESULT.json","verifier":"experiments/04-credential-custody/verify.mjs"},
-  {"id":"05-request-fidelity","state":"unrun"},
+  {"id":"05-request-fidelity","state":"partial","receipt":"experiments/05-request-fidelity/RESULT.json","verifier":"experiments/05-request-fidelity/verify.mjs"},
   {"id":"06-write-approval","state":"unrun"},
   {"id":"07-principal-identity","state":"unrun"},
   {"id":"08-specification-drift","state":"unrun"},

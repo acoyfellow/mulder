@@ -1,0 +1,110 @@
+{
+  "schema": "mulder.request-fidelity.v0",
+  "cases": [
+    {
+      "name": "path-encoding",
+      "outcome": "match",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 200,
+        "body": {
+          "method": "GET",
+          "pathname": "/echo/A%2FB",
+          "search": "",
+          "trace": null,
+          "contentType": null,
+          "body": ""
+        }
+      }
+    },
+    {
+      "name": "scalar-query",
+      "outcome": "match",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 200,
+        "body": {
+          "method": "GET",
+          "pathname": "/echo",
+          "search": "?tag=one+two",
+          "trace": null,
+          "contentType": null,
+          "body": ""
+        }
+      }
+    },
+    {
+      "name": "array-query-explode",
+      "outcome": "mismatch",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 200,
+        "body": {
+          "method": "GET",
+          "pathname": "/echo",
+          "search": "?tag=a%2Cb",
+          "trace": null,
+          "contentType": null,
+          "body": ""
+        }
+      },
+      "expected": "?tag=a&tag=b"
+    },
+    {
+      "name": "header-parameter",
+      "outcome": "unsupported",
+      "reachedOrigin": false,
+      "reason": "generated operation has no header parameter model"
+    },
+    {
+      "name": "json-body",
+      "outcome": "match",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 200,
+        "body": {
+          "method": "POST",
+          "pathname": "/echo",
+          "search": "",
+          "trace": null,
+          "contentType": "application/json",
+          "body": "{\"city\":\"Lima\",\"active\":true}"
+        }
+      }
+    },
+    {
+      "name": "multipart-body",
+      "outcome": "mismatch",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 200,
+        "body": {
+          "method": "POST",
+          "pathname": "/echo",
+          "search": "",
+          "trace": null,
+          "contentType": "application/json",
+          "body": "{\"file\":\"hello\",\"label\":\"one\"}"
+        }
+      },
+      "expected": "multipart/form-data"
+    },
+    {
+      "name": "http-error-status",
+      "outcome": "match",
+      "reachedOrigin": true,
+      "observed": {
+        "status": 422,
+        "body": {
+          "error": "fixture_rejected"
+        }
+      }
+    }
+  ],
+  "counts": {
+    "match": 4,
+    "mismatch": 2,
+    "unsupported": 1
+  },
+  "verdict": "partial"
+}

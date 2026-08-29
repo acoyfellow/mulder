@@ -6,7 +6,7 @@
 | 02 | API with no HTML document | partial | JSON cannot publish tools; a generated same-origin companion document passed natively |
 | 03 | OpenAPI schema compatibility | proven with boundary | Ten shapes register and invoke; Chrome did not enforce tested constraints |
 | 04 | Credential custody | proven locally | Native call reached a protected independent origin; credential remained edge-only |
-| 05 | Request fidelity | unrun | Path, query, header, JSON, multipart, and error cases match direct API calls |
+| 05 | Request fidelity | partial | Path, scalar query, JSON, and errors match; arrays, headers, and multipart do not |
 | 06 | Approval for writes | unrun | Read executes; write pauses; approval executes once; replay fails |
 | 07 | Principal identity | unrun | Human, browser session, and agent identity remain distinct in one audit record |
 | 08 | Specification drift | unrun | Added, changed, and removed operations update native tools safely |
