@@ -1,6 +1,6 @@
 {
   "state": "experimenting",
-  "iteration": 7,
+  "iteration": 8,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
     "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
@@ -10,22 +10,23 @@
     "Cloudflare can generate a same-origin companion document for a JSON-only API, and that document can publish and call native tools.",
     "Ten tested OpenAPI-style schema shapes registered, were natively discovered, and completed native invocations in Chrome 151.",
     "A native call reached a separately protected unchanged origin while the random origin credential remained only in the edge binding and protected subrequest.",
-    "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent echo origin."
+    "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent echo origin.",
+    "The edge can verify a server-issued HttpOnly browser session independently of tool input."
   ],
   "falsified": [
     "Inline script injection works on a page with script-src self.",
     "A JSON API document can itself publish native WebMCP tools.",
     "Chrome registration means Chrome enforces JSON Schema constraints before tool execution.",
-    "The current compiler has general OpenAPI request fidelity: array query, header, and multipart cases failed or were unsupported."
+    "The current compiler has general OpenAPI request fidelity: array query, header, and multipart cases failed or were unsupported.",
+    "Native WebMCP supplies an edge-verifiable agent principal distinct from the browser session."
   ],
   "notProven": [
     "CSP policies that require a nonce or hash and do not allow self",
     "Approval for writes",
-    "Distinct human and agent identity",
     "Specification drift",
     "Tool-count limits",
     "Edge denial before origin"
   ],
-  "currentExperiment": "07-principal-identity",
-  "nextAction": "Determine whether native WebMCP supplies an edge-verifiable agent principal distinct from the human and browser session."
+  "currentExperiment": "10-edge-denial",
+  "nextAction": "Prove denied adapter calls leave an independent origin request counter unchanged."
 }

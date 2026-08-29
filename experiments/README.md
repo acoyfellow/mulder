@@ -8,7 +8,7 @@
 | 04 | Credential custody | proven locally | Native call reached a protected independent origin; credential remained edge-only |
 | 05 | Request fidelity | partial | Path, scalar query, JSON, and errors match; arrays, headers, and multipart do not |
 | 06 | Approval for writes | unrun | Read executes; write pauses; approval executes once; replay fails |
-| 07 | Principal identity | unrun | Human, browser session, and agent identity remain distinct in one audit record |
+| 07 | Principal identity | falsified for WebMCP alone | Browser session is verifiable; native calls carry no edge-verifiable agent principal |
 | 08 | Specification drift | unrun | Added, changed, and removed operations update native tools safely |
 | 09 | Tool-count limits | unrun | Measured discovery and call boundary with failure behavior |
 | 10 | Edge denial | unrun | Denied generated call never reaches the unchanged API |

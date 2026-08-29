@@ -1,12 +1,14 @@
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
 import { custodyExperimentModule, custodyExperimentPage } from "./custody-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
+import { identityExperimentModule, identityExperimentPage } from "./identity-experiment";
 import { buildRequest, generateTools } from "./openapi";
 import { schemaExperimentModule, schemaExperimentPage } from "./schema-experiment";
 
 const tools = generateTools(fixtureDocument);
 const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
 let custodySession = "";
+let identitySession = "";
 
 type Env = {
   ORIGIN_SECRET?: string;
@@ -42,6 +44,26 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/identity") {
+      identitySession = crypto.randomUUID();
+      return new Response(identityExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_identity=${identitySession}; HttpOnly; SameSite=Strict; Path=/` } });
+    }
+    if (url.pathname === "/experiments/identity/module.js") return new Response(identityExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    if (url.pathname === "/__mulder/identity-call" && request.method === "POST") {
+      const browserVerified = request.headers.get("cookie")?.split(";").map((part) => part.trim()).includes(`mulder_identity=${identitySession}`) === true;
+      let input: Record<string, unknown>;
+      try { input = await request.json() as Record<string, unknown>; }
+      catch { return Response.json({ error: "bad_input" }, { status: 400 }); }
+      const assertionHeaders = [...request.headers].filter(([name]) => /^(authorization|signature|signature-input|x-agent-id|x-agent-signature)$/i.test(name)).map(([name]) => name);
+      return Response.json({
+        humanPrincipal: null,
+        browserPrincipal: browserVerified ? { verified: true, source: "server-issued-http-only-session" } : null,
+        agentPrincipal: null,
+        claimedAgentInput: input.agentId ?? null,
+        claimedAgentAccepted: false,
+        browserProvidedAgentAssertionHeaders: assertionHeaders,
+      });
+    }
     if (url.pathname === "/experiments/custody") {
       custodySession = crypto.randomUUID();
       return new Response(custodyExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_custody=${custodySession}; HttpOnly; SameSite=Strict; Path=/` } });

@@ -1,0 +1,33 @@
+{
+  "schema": "mulder.principal-identity.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "native": {
+    "frameId": "5B572B398BBA938ABF0172648F7B5108",
+    "invocationId": "C66CB7F111D09C6CF634B2D92FDE2ABE",
+    "status": "Completed",
+    "input": {
+      "agentId": "spoofed-agent",
+      "probe": "identity"
+    }
+  },
+  "edge": {
+    "humanPrincipal": null,
+    "browserPrincipal": {
+      "verified": true,
+      "source": "server-issued-http-only-session"
+    },
+    "agentPrincipal": null,
+    "claimedAgentInput": "spoofed-agent",
+    "claimedAgentAccepted": false,
+    "browserProvidedAgentAssertionHeaders": []
+  },
+  "visible": {
+    "visible": "{\"status\":200,\"body\":{\"humanPrincipal\":null,\"browserPrincipal\":{\"verified\":true,\"source\":\"server-issued-http-only-session\"},\"agentPrincipal\":null,\"claimedAgentInput\":\"spoofed-agent\",\"claimedAgentAccepted\":false,\"browserProvidedAgentAssertionHeaders\":[]}}",
+    "cookie": ""
+  },
+  "screenshot": {
+    "path": "experiments/07-principal-identity/native.png",
+    "sha256": "38189ae1f8a658f8953721cb0ac4f8ec531a338fb7fd3e783228507ed58c2068"
+  },
+  "verdict": "falsified-native-webmcp-has-no-edge-verifiable-agent-principal"
+}

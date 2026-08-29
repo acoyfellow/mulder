@@ -7,7 +7,7 @@
     "dev": "wrangler dev --port 8891 --inspector-port 0",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
-    "proof": "node proof/verify.mjs && node experiments/01-csp/verify.mjs && node experiments/02-api-without-document/verify.mjs && node experiments/03-schema-compatibility/verify.mjs && node experiments/04-credential-custody/verify.mjs && node experiments/05-request-fidelity/verify.mjs",
+    "proof": "node proof/verify.mjs && node experiments/01-csp/verify.mjs && node experiments/02-api-without-document/verify.mjs && node experiments/03-schema-compatibility/verify.mjs && node experiments/04-credential-custody/verify.mjs && node experiments/05-request-fidelity/verify.mjs && node experiments/07-principal-identity/verify.mjs",
     "check": "bun run typecheck && bun test && bun run proof"
   },
   "devDependencies": {
