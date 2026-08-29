@@ -1,6 +1,6 @@
 {
   "state": "experimenting",
-  "iteration": 5,
+  "iteration": 6,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
     "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
@@ -8,7 +8,8 @@
     "An operation without x-webmcp-enabled true was absent from native discovery and the generated call route.",
     "An external same-origin bootstrap preserves script-src self and passes native discovery and invocation.",
     "Cloudflare can generate a same-origin companion document for a JSON-only API, and that document can publish and call native tools.",
-    "Ten tested OpenAPI-style schema shapes registered, were natively discovered, and completed native invocations in Chrome 151."
+    "Ten tested OpenAPI-style schema shapes registered, were natively discovered, and completed native invocations in Chrome 151.",
+    "A native call reached a separately protected unchanged origin while the random origin credential remained only in the edge binding and protected subrequest."
   ],
   "falsified": [
     "Inline script injection works on a page with script-src self.",
@@ -17,7 +18,6 @@
   ],
   "notProven": [
     "CSP policies that require a nonce or hash and do not allow self",
-    "Credential custody",
     "Request fidelity beyond path and query GET",
     "Approval for writes",
     "Distinct human and agent identity",
@@ -25,6 +25,6 @@
     "Tool-count limits",
     "Edge denial before origin"
   ],
-  "currentExperiment": "04-credential-custody",
-  "nextAction": "Prove or falsify edge-held credential custody with independent origin evidence and native Chrome."
+  "currentExperiment": "05-request-fidelity",
+  "nextAction": "Compare generated and direct API requests for path, query, header, JSON, multipart, and error semantics."
 }

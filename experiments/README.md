@@ -5,7 +5,7 @@
 | 01 | Content Security Policy | pass for `script-src 'self'` | Inline discovery failed; external same-origin bootstrap passed natively without changing CSP |
 | 02 | API with no HTML document | partial | JSON cannot publish tools; a generated same-origin companion document passed natively |
 | 03 | OpenAPI schema compatibility | proven with boundary | Ten shapes register and invoke; Chrome did not enforce tested constraints |
-| 04 | Credential custody | unrun | Authenticated origin call with no credential in page, tool input, or receipt |
+| 04 | Credential custody | proven locally | Native call reached a protected independent origin; credential remained edge-only |
 | 05 | Request fidelity | unrun | Path, query, header, JSON, multipart, and error cases match direct API calls |
 | 06 | Approval for writes | unrun | Read executes; write pauses; approval executes once; replay fails |
 | 07 | Principal identity | unrun | Human, browser session, and agent identity remain distinct in one audit record |

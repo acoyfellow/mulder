@@ -1,10 +1,17 @@
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
+import { custodyExperimentModule, custodyExperimentPage } from "./custody-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { buildRequest, generateTools } from "./openapi";
 import { schemaExperimentModule, schemaExperimentPage } from "./schema-experiment";
 
 const tools = generateTools(fixtureDocument);
 const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
+let custodySession = "";
+
+type Env = {
+  ORIGIN_SECRET?: string;
+  ORIGIN_URL?: string;
+};
 
 class BootstrapInjector {
   constructor(private readonly source: string) {}
@@ -32,9 +39,24 @@ async function callGeneratedTool(request: Request, name: string): Promise<Respon
 }
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/custody") {
+      custodySession = crypto.randomUUID();
+      return new Response(custodyExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_custody=${custodySession}; HttpOnly; SameSite=Strict; Path=/` } });
+    }
+    if (url.pathname === "/experiments/custody/module.js") return new Response(custodyExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    if (url.pathname === "/__mulder/custody-call" && request.method === "POST") {
+      if (request.headers.get("cookie")?.split(";").map((part) => part.trim()).includes(`mulder_custody=${custodySession}`) !== true) return Response.json({ error: "adapter_unauthorized" }, { status: 401 });
+      if (!env.ORIGIN_SECRET || !env.ORIGIN_URL) return Response.json({ error: "origin_binding_missing" }, { status: 503 });
+      let input: { city?: string };
+      try { input = await request.json() as { city?: string }; }
+      catch { return Response.json({ error: "bad_input" }, { status: 400 }); }
+      if (!input.city || input.city.length > 100) return Response.json({ error: "city_required" }, { status: 400 });
+      const response = await fetch(`${env.ORIGIN_URL}/weather/${encodeURIComponent(input.city)}`, { headers: { authorization: `Bearer ${env.ORIGIN_SECRET}` } });
+      return new Response(response.body, { status: response.status, headers: { "content-type": "application/json" } });
+    }
     if (url.pathname === "/experiments/schema") return new Response(schemaExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
     if (url.pathname === "/experiments/schema/module.js") return new Response(schemaExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/__mulder" || url.pathname === "/__mulder/") {
@@ -64,4 +86,4 @@ export default {
     }
     return new Response("not found", { status: 404 });
   },
-} satisfies ExportedHandler;
+} satisfies ExportedHandler<Env>;

@@ -1,0 +1,75 @@
+{
+  "schema": "mulder.credential-custody.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "credential": {
+    "algorithm": "sha256",
+    "fingerprint": "da469b1e136a50d9d982c578e4da3ea49e576edbe56e98bae53f47870e15d5d8"
+  },
+  "native": {
+    "tool": "get_secret_weather",
+    "invocationId": "7134C4C096AD84962AB607402DDD543A",
+    "status": "Completed",
+    "output": {
+      "status": 200,
+      "body": {
+        "city": "Paris",
+        "temperature": 23,
+        "source": "protected-unchanged-origin",
+        "requestNumber": 1
+      }
+    },
+    "visible": {
+      "visible": "{\"status\":200,\"body\":{\"city\":\"Paris\",\"temperature\":23,\"source\":\"protected-unchanged-origin\",\"requestNumber\":1}}",
+      "cookie": "",
+      "localStorage": {},
+      "sessionStorage": {}
+    },
+    "screenshot": {
+      "path": "experiments/04-credential-custody/native.png",
+      "sha256": "bf3a5287216567665152e1813b7182c7e066b9c98c7f5a16310dfddc3fcbc7d4"
+    }
+  },
+  "negativeControls": {
+    "before": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "da469b1e136a50d9d982c578e4da3ea49e576edbe56e98bae53f47870e15d5d8"
+    },
+    "directOriginStatus": 401,
+    "afterDirectOrigin": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 1,
+      "credentialFingerprint": "da469b1e136a50d9d982c578e4da3ea49e576edbe56e98bae53f47870e15d5d8"
+    },
+    "unauthorizedAdapterStatus": 401,
+    "afterUnauthorizedAdapter": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 1,
+      "credentialFingerprint": "da469b1e136a50d9d982c578e4da3ea49e576edbe56e98bae53f47870e15d5d8"
+    }
+  },
+  "origin": {
+    "authorizedCount": 1,
+    "unauthorizedCount": 1,
+    "credentialFingerprint": "da469b1e136a50d9d982c578e4da3ea49e576edbe56e98bae53f47870e15d5d8"
+  },
+  "secretScan": [
+    {
+      "artifact": "native",
+      "exactMatches": 0
+    },
+    {
+      "artifact": "html",
+      "exactMatches": 0
+    },
+    {
+      "artifact": "bootstrap",
+      "exactMatches": 0
+    },
+    {
+      "artifact": "manifest",
+      "exactMatches": 0
+    }
+  ],
+  "verdict": "pass-local-custody"
+}
