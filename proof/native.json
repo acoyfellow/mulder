@@ -1,0 +1,87 @@
+{
+  "schema": "webmcp-proof.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "url": "http://127.0.0.1:8891/",
+  "featureNames": [
+    "WebMCP",
+    "DevToolsWebMCPSupport"
+  ],
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Read the current weather for a city",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit"
+            ]
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "readOnly": true,
+        "untrustedContent": false
+      },
+      "frameId": "7D5429C4CDD8CEFB6B5B776B2D2A5BB6",
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:8891/",
+            "lineNumber": 6,
+            "columnNumber": 18
+          }
+        ]
+      }
+    }
+  ],
+  "calls": [
+    {
+      "invocationId": "98722D63BF5B5559A2A8969539C0F4B9",
+      "invoked": {
+        "toolName": "get_weather",
+        "frameId": "7D5429C4CDD8CEFB6B5B776B2D2A5BB6",
+        "invocationId": "98722D63BF5B5559A2A8969539C0F4B9",
+        "input": "{\"city\":\"Lisbon\",\"units\":\"celsius\"}"
+      },
+      "responded": {
+        "invocationId": "98722D63BF5B5559A2A8969539C0F4B9",
+        "status": "Completed",
+        "output": {
+          "status": 200,
+          "body": {
+            "city": "Lisbon",
+            "units": "celsius",
+            "temperature": 19,
+            "source": "unchanged-fixture-api"
+          }
+        }
+      },
+      "output": {
+        "status": 200,
+        "body": {
+          "city": "Lisbon",
+          "units": "celsius",
+          "temperature": 19,
+          "source": "unchanged-fixture-api"
+        }
+      }
+    }
+  ],
+  "inspected": "{\n  \"tool\": \"get_weather\",\n  \"status\": 200,\n  \"body\": {\n    \"city\": \"Lisbon\",\n    \"units\": \"celsius\",\n    \"temperature\": 19,\n    \"source\": \"unchanged-fixture-api\"\n  }\n}",
+  "screenshot": {
+    "path": "proof/native.png",
+    "sha256": "4fe222fd6b24ef13d3ded31d7793eced99634ec1bc8b87256d7a8031be2310e3"
+  }
+}
