@@ -47,7 +47,7 @@ rm -rf "$PRODUCER_BUILD" "$TARGET/extracted"
 cp proof/consumer/{api.ts,index.ts,native-proof.mjs,wrangler.jsonc,tsconfig.json} "$CONSUMER/"
 cp proof/native-harness.mjs "$CONSUMER/native-harness.mjs"
 CONSUMER_MARKER="consumer-$(openssl rand -hex 16)"
-printf 'export const marker = %q;\n' "\"$CONSUMER_MARKER\"" > "$CONSUMER/marker.ts"
+printf 'export const marker = "%s";\n' "$CONSUMER_MARKER" > "$CONSUMER/marker.ts"
 cat > "$CONSUMER/package.json" <<JSON
 {
   "name": "mulder-clean-consumer",
@@ -67,6 +67,7 @@ STERILE=(env -i "PATH=$PATH" "HOME=$TARGET/home" "NPM_CONFIG_USERCONFIG=$EMPTY_N
   cd "$CONSUMER"
   "${STERILE[@]}" npm install --package-lock-only --ignore-scripts
   "${STERILE[@]}" npm ci --ignore-scripts
+  "${STERILE[@]}" npm audit --omit=dev --audit-level=high
 )
 node - "$CONSUMER/package-lock.json" <<'NODE'
 const lock = require(process.argv[2]);
@@ -80,8 +81,9 @@ for (const [path, entry] of Object.entries(lock.packages)) {
 }
 NODE
 [[ -d "$CONSUMER/node_modules/mulder" && ! -L "$CONSUMER/node_modules/mulder" ]]
+CONSUMER_REAL=$(cd "$CONSUMER" && pwd -P)
 RESOLVED=$(cd "$CONSUMER" && node --input-type=module -e 'console.log(import.meta.resolve("mulder"))')
-case "$RESOLVED" in file://$CONSUMER/node_modules/mulder/dist/public.js) ;; *) echo "Mulder resolved outside installed artifact" >&2; exit 1 ;; esac
+case "$RESOLVED" in file://$CONSUMER_REAL/node_modules/mulder/dist/public.js) ;; *) echo "Mulder resolved outside installed artifact: $RESOLVED" >&2; exit 1 ;; esac
 POLICY="(version 1)(allow default)(deny file-read* (subpath \"$ROOT\"))"
 if sandbox-exec -p "$POLICY" test -r "$ROOT/package.json"; then echo "producer read negative control failed" >&2; exit 1; fi
 
