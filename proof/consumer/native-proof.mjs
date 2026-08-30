@@ -5,7 +5,7 @@ const browserPath = process.env.BROWSER_PATH;
 const marker = process.env.CONSUMER_MARKER;
 const outputPath = process.env.OUTPUT_PATH;
 if (!browserPath || !marker || !outputPath) throw new Error("BROWSER_PATH, CONSUMER_MARKER, and OUTPUT_PATH are required");
-const base = "http://127.0.0.1:8893";
+const base = process.env.CONSUMER_URL ?? "http://127.0.0.1:8893";
 const control = await fetch(`${base}/api/weather/Lisbon?units=celsius`).then((response) => response.json());
 if (control.marker !== marker || control.source !== "consumer-owned-unchanged-api") throw new Error("consumer API control failed");
 await fetch(`${base}/reset`, { method: "POST" });

@@ -1,5 +1,5 @@
 import { createWebMcpCompanion } from "mulder";
-import { applicationFetch } from "./api";
+import { applicationFetch, consumerPage } from "./api";
 
 const document = {
   openapi: "3.1.0",
@@ -20,7 +20,7 @@ const document = {
 
 const companion = createWebMcpCompanion({
   document,
-  renderPage: () => new Response("<!doctype html><html><body><h1>Consumer weather</h1><pre id=mulder-result>waiting</pre></body></html>", { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": "default-src 'self'; script-src 'self'; connect-src 'self'" } }),
+  renderPage: () => new Response(consumerPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": "default-src 'self'; script-src 'self'; connect-src 'self'; style-src 'unsafe-inline'" } }),
   dispatch: (request) => applicationFetch(request),
 });
 
