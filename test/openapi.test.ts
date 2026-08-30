@@ -4,7 +4,7 @@ import { fixtureDocument } from "../src/fixture";
 import { buildRequest, executeTool, generateTools, type OpenApiDocument, type OpenApiOperation } from "../src/openapi";
 
 function documentWith(operation: OpenApiOperation, path = "/items/{id}"): OpenApiDocument {
-  return { openapi: "3.1.0", paths: { [path]: { post: { operationId: "create_item", "x-webmcp-enabled": true, ...operation } } } };
+  return { openapi: "3.1.0", paths: { [path]: { get: { operationId: "get_item", "x-webmcp-enabled": true, ...operation } } } };
 }
 
 describe("OpenAPI to WebMCP", () => {
@@ -30,21 +30,22 @@ describe("OpenAPI to WebMCP", () => {
   });
 
   test("fails closed when an enabled operation has no stable name", () => {
-    expect(() => generateTools({ openapi: "3.1.0", paths: { "/danger": { post: { "x-webmcp-enabled": true } } } })).toThrow("needs operationId");
+    expect(() => generateTools({ openapi: "3.1.0", paths: { "/danger": { get: { "x-webmcp-enabled": true } } } })).toThrow("needs operationId");
   });
 
   test("rejects unsupported parameter locations, arrays, references, and media types", () => {
     const base = { parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }] };
     expect(() => generateTools(documentWith({ ...base, parameters: [...base.parameters, { name: "authorization", in: "header", schema: { type: "string" } }] }))).toThrow("unsupported parameter location header");
     expect(() => generateTools(documentWith({ ...base, parameters: [...base.parameters, { name: "tags", in: "query", schema: { type: "array", items: { type: "string" } } }] }))).toThrow("unsupported schema type array");
-    expect(() => generateTools(documentWith({ ...base, requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Item" } } } } }))).toThrow("unsupported schema keyword $ref");
-    expect(() => generateTools(documentWith({ ...base, requestBody: { content: { "multipart/form-data": { schema: { type: "object" } } } } }))).toThrow("unsupported request media type multipart/form-data");
+    expect(() => generateTools(documentWith({ ...base, parameters: [...base.parameters, { name: "id2", in: "path", required: true, style: "matrix", schema: { type: "string" } }] }, "/items/{id}/{id2}"))).toThrow("style matrix is unsupported");
+    expect(() => generateTools(documentWith({ ...base, requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Item" } } } } }))).toThrow("request bodies are unsupported");
+    expect(() => generateTools(documentWith({ ...base, requestBody: { content: { "multipart/form-data": { schema: { type: "object" } } } } }))).toThrow("request bodies are unsupported");
   });
 
   test("rejects path mismatches, reserved names, and path-item parameters", () => {
     expect(() => generateTools(documentWith({ parameters: [{ name: "other", in: "path", required: true, schema: { type: "string" } }] }))).toThrow("path template and parameters do not match");
     expect(() => generateTools(documentWith({ parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }, { name: "body", in: "query", schema: { type: "string" } }] }))).toThrow("duplicate or reserved parameter body");
-    const withPathItemParameters = { openapi: "3.1.0", paths: { "/items/{id}": { parameters: [], post: { operationId: "create_item", "x-webmcp-enabled": true } } } } as unknown as OpenApiDocument;
+    const withPathItemParameters = { openapi: "3.1.0", paths: { "/items/{id}": { parameters: [], get: { operationId: "get_item", "x-webmcp-enabled": true } } } } as unknown as OpenApiDocument;
     expect(() => generateTools(withPathItemParameters)).toThrow("path-item parameters are unsupported");
   });
 
@@ -59,14 +60,23 @@ describe("OpenAPI to WebMCP", () => {
     expect(dispatches).toBe(1);
   });
 
+  test("rejects generated mutating operations before publication", () => {
+    const document = { openapi: "3.1.0", paths: { "/items": { post: { operationId: "create_item", "x-webmcp-enabled": true } } } } as OpenApiDocument;
+    expect(() => generateTools(document)).toThrow("generated tools are read-only");
+  });
+
   test("validates the complete input before request construction", async () => {
-    const [tool] = generateTools(documentWith({
-      parameters: [
-        { name: "id", in: "path", required: true, schema: { type: "string", pattern: "^[a-z]+$" } },
-        { name: "limit", in: "query", required: true, schema: { type: "integer", minimum: 1, maximum: 10 } },
-      ],
-      requestBody: { required: true, content: { "application/json": { schema: { type: "object", additionalProperties: false, required: ["name"], properties: { name: { type: "string", minLength: 2 }, active: { type: "boolean" } } } } } },
-    }));
+    const tool = {
+      name: "internal_json_request",
+      description: "internal validated request",
+      inputSchema: { type: "object", additionalProperties: false, required: ["id", "limit", "body"], properties: {
+        id: { type: "string", pattern: "^[a-z]+$" },
+        limit: { type: "integer", minimum: 1, maximum: 10 },
+        body: { type: "object", additionalProperties: false, required: ["name"], properties: { name: { type: "string", minLength: 2 }, active: { type: "boolean" } } },
+      } },
+      annotations: { readOnlyHint: false },
+      operation: { method: "POST", path: "/items/{id}", pathParameters: ["id"], queryParameters: ["limit"], hasBody: true },
+    };
     const request = buildRequest(tool, { id: "alpha", limit: 2, body: { name: "ok", active: true } }, "https://mulder.test");
     expect(request.url).toBe("https://mulder.test/items/alpha?limit=2");
     expect(request.headers.get("content-type")).toBe("application/json");

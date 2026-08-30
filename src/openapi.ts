@@ -99,8 +99,10 @@ function operationSchema(operation: OpenApiOperation, method: string, path: stri
     if (parameter.in !== "path" && parameter.in !== "query") fail(context, `unsupported parameter location ${parameter.in}`);
     if (parameter.content) fail(context, `parameter ${parameter.name} content is unsupported`);
     if (parameter.allowReserved === true) fail(context, `parameter ${parameter.name} allowReserved is unsupported`);
-    if (parameter.style !== undefined && parameter.style !== "form" && parameter.in === "query") fail(context, `parameter ${parameter.name} style ${parameter.style} is unsupported`);
-    if (parameter.explode === false && parameter.in === "query") fail(context, `parameter ${parameter.name} explode false is unsupported`);
+    if (parameter.in === "query" && parameter.style !== undefined && parameter.style !== "form") fail(context, `parameter ${parameter.name} style ${parameter.style} is unsupported`);
+    if (parameter.in === "query" && parameter.explode === false) fail(context, `parameter ${parameter.name} explode false is unsupported`);
+    if (parameter.in === "path" && parameter.style !== undefined && parameter.style !== "simple") fail(context, `parameter ${parameter.name} style ${parameter.style} is unsupported`);
+    if (parameter.in === "path" && parameter.explode === true) fail(context, `parameter ${parameter.name} explode true is unsupported`);
     if (names.has(parameter.name) || parameter.name === "body") fail(context, `duplicate or reserved parameter ${parameter.name}`);
     names.add(parameter.name);
     assertSupportedSchema(parameter.schema, `${context} parameter ${parameter.name}`, false);
@@ -116,22 +118,13 @@ function operationSchema(operation: OpenApiOperation, method: string, path: stri
   if (new Set(templateNames).size !== templateNames.length) fail(context, "duplicate path template parameter");
   if (templateNames.some((name) => !pathParameters.includes(name)) || pathParameters.some((name) => !templateNames.includes(name))) fail(context, "path template and parameters do not match");
 
-  const content = operation.requestBody?.content;
-  const mediaTypes = Object.keys(content ?? {});
-  if (mediaTypes.some((type) => type !== "application/json") || mediaTypes.length > 1) fail(context, `unsupported request media type ${mediaTypes.join(",") || "missing"}`);
-  const bodySchema = content?.["application/json"]?.schema;
-  if (operation.requestBody && !bodySchema) fail(context, "application/json body schema required");
-  if (bodySchema) {
-    assertSupportedSchema(bodySchema, `${context} body`, true);
-    properties.body = bodySchema;
-    if (operation.requestBody?.required) required.push("body");
-  }
+  if (operation.requestBody) fail(context, "request bodies are unsupported for generated read-only tools");
 
   return {
     schema: { type: "object", properties, required, additionalProperties: false },
     pathParameters,
     queryParameters,
-    hasBody: Boolean(bodySchema),
+    hasBody: false,
   };
 }
 
@@ -145,6 +138,7 @@ export function generateTools(document: OpenApiDocument): GeneratedTool[] {
     for (const [method, operation] of Object.entries(pathItem)) {
       const normalizedMethod = method.toLowerCase();
       if (!methods.has(normalizedMethod) || operation["x-webmcp-enabled"] !== true) continue;
+      if (normalizedMethod !== "get") throw new Error(`enabled operation ${normalizedMethod.toUpperCase()} ${path} is mutating; generated tools are read-only`);
       if (!operation.operationId) throw new Error(`enabled operation ${normalizedMethod.toUpperCase()} ${path} needs operationId`);
       if (names.has(operation.operationId)) throw new Error(`duplicate operationId ${operation.operationId}`);
       names.add(operation.operationId);

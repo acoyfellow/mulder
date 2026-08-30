@@ -1,7 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
-import { intentDigest, type IntentEnvelope, type IntentState } from "./intent-core";
+import { expiryDisposition, intentDigest, type IntentEnvelope, type IntentState } from "./intent-core";
 
-export { intentDigest, sha256, type IntentEnvelope, type IntentState } from "./intent-core";
+export { expiryDisposition, intentDigest, sha256, type IntentEnvelope, type IntentState } from "./intent-core";
 
 type Decision = {
   id: string;
@@ -91,6 +91,12 @@ export class IntentDurableObject extends DurableObject<IntentEnv> {
     const record = await this.record();
     if (!record) return jsonError("intent_not_found", 404);
     if ((record.state === "succeeded" || record.state === "failed") && record.result) return new Response(record.result.bodyText, { status: record.result.status, headers: { "content-type": record.result.contentType, "x-mulder-intent": record.id, "x-mulder-replay": "stored" } });
+    const expiry = expiryDisposition(record.state, record.envelope.expiresAt, Date.now());
+    if (expiry === "expire") {
+      await this.ctx.storage.put("intent", { ...record, state: "expired", updatedAt: Date.now() });
+      return jsonError("intent_expired", 409);
+    }
+    if (expiry === "uncertain") return jsonError("origin_outcome_unknown", 409);
     if (record.state !== "approved" && record.state !== "dispatching") return jsonError(`intent_${record.state}`, 409);
     if (!this.env.ORIGIN_SECRET || !this.env.ORIGIN_URL) return jsonError("origin_binding_missing", 503);
     if (record.state === "approved") await this.ctx.storage.put("intent", { ...record, state: "dispatching", updatedAt: Date.now() });

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { intentDigest, type IntentEnvelope } from "../src/intent-core";
+import { expiryDisposition, intentDigest, type IntentEnvelope } from "../src/intent-core";
 
 const envelope: IntentEnvelope = {
   version: 1,
@@ -17,6 +17,13 @@ const envelope: IntentEnvelope = {
 };
 
 describe("durable write intents", () => {
+  test("expired approval cannot begin or resume dispatch", () => {
+    expect(expiryDisposition("approved", 100, 100)).toBe("expire");
+    expect(expiryDisposition("dispatching", 100, 101)).toBe("uncertain");
+    expect(expiryDisposition("approved", 101, 100)).toBe("continue");
+    expect(expiryDisposition("succeeded", 100, 101)).toBe("continue");
+  });
+
   test("the approval digest binds every authority-bearing envelope field", async () => {
     const baseline = await intentDigest(envelope);
     expect(await intentDigest({ ...envelope })).toBe(baseline);

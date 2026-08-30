@@ -1,27 +1,32 @@
 {
-  "state": "hardening",
-  "goal": "Release-ready secure WebMCP companion page for the documented OpenAPI subset.",
+  "state": "release-candidate",
+  "goal": "Release-ready secure WebMCP companion page for the documented read-only OpenAPI subset.",
   "completed": [
-    "Committed public-registry lockfile and proved an isolated frozen install.",
-    "Documented and enforced a fail-closed OpenAPI 3.1 subset.",
+    "Committed a public-registry lockfile and proved an isolated frozen install.",
+    "Documented and enforced a fail-closed read-only OpenAPI 3.1 subset.",
+    "Rejected unsupported path serialization and every generated mutating operation.",
     "Validated full tool input before origin dispatch with a zero-dispatch denial test.",
-    "Moved write intents and terminal results to per-intent Durable Objects.",
+    "Moved write-intent test state and terminal results to per-intent Durable Objects.",
     "Bound approval digests to the complete immutable authority envelope.",
     "Proved concurrent approval yields one logical effect at an idempotent origin.",
-    "Proved terminal replay survives a local Wrangler restart."
+    "Proved terminal replay survives a local Wrangler restart.",
+    "Disabled the local approval fixture unless an explicit local-only variable is true.",
+    "Replaced the constant CSP nonce with fresh per-response random nonces.",
+    "Added live release-gate replays for CSP, credential custody, edge denial, native calls, and durable approval.",
+    "Closed all six findings from the final adversarial security review."
   ],
   "remaining": [
-    "Create proof/product-ready.sh with a fresh isolated public-registry install.",
-    "Replay native Chrome discovery and invocation from the product gate.",
-    "Replay request fidelity and durable approval from the product gate.",
-    "Run a final security audit and close material findings.",
-    "Make the product-ready gate pass from a clean committed tree."
+    "Commit the final security fixes.",
+    "Run proof/product-ready.sh from the final clean commit.",
+    "Pass the Terraloop gate."
   ],
   "excluded": [
     "Public deployment",
     "Remote creation",
     "General OpenAPI support",
+    "Generated mutating tools",
     "Crash-safe writes to origins without idempotency",
+    "Production human identity integration",
     "Native WebMCP agent identity"
   ]
 }

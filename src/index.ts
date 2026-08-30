@@ -18,6 +18,7 @@ let identitySession = "";
 
 type Env = {
   HUMAN_APPROVAL_SECRET?: string;
+  LOCAL_APPROVAL_FIXTURE?: string;
   ORIGIN_SECRET?: string;
   ORIGIN_URL?: string;
   INTENTS?: DurableObjectNamespace<IntentDurableObject>;
@@ -67,11 +68,16 @@ export default {
     if (url.pathname === "/experiments/drift") return new Response(driftExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
     if (url.pathname === "/experiments/drift/module.js") return new Response(driftExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/experiments/approval") {
+      if (env.LOCAL_APPROVAL_FIXTURE !== "true") return new Response("not found", { status: 404 });
       const approvalSession = crypto.randomUUID();
       return new Response(approvalExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_approval=${approvalSession}; HttpOnly; SameSite=Strict; Path=/` } });
     }
-    if (url.pathname === "/experiments/approval/module.js") return new Response(approvalExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    if (url.pathname === "/experiments/approval/module.js") {
+      if (env.LOCAL_APPROVAL_FIXTURE !== "true") return new Response("not found", { status: 404 });
+      return new Response(approvalExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    }
     if (url.pathname.startsWith("/__mulder/intents/") && request.method === "GET") {
+      if (env.LOCAL_APPROVAL_FIXTURE !== "true") return new Response("not found", { status: 404 });
       const id = url.pathname.slice("/__mulder/intents/".length);
       const stub = intentStub(env, id);
       const session = cookieValue(request, "mulder_approval");
@@ -79,6 +85,7 @@ export default {
       return stub.fetch("http://intent/status", { headers: { "x-browser-session-hash": await sha256(session) } });
     }
     if (url.pathname === "/__mulder/approve" && request.method === "POST") {
+      if (env.LOCAL_APPROVAL_FIXTURE !== "true") return new Response("not found", { status: 404 });
       if (!env.HUMAN_APPROVAL_SECRET || request.headers.get("x-human-approval") !== env.HUMAN_APPROVAL_SECRET) return Response.json({ error: "human_unauthorized" }, { status: 401 });
       const body = await request.json() as { intentId?: string; digest?: string; decisionId?: string };
       const stub = body.intentId ? intentStub(env, body.intentId) : undefined;
@@ -93,6 +100,7 @@ export default {
       return Response.json({ approval: approvalBody, execution: { status: execution.status, body: executionBody, replay: execution.headers.get("x-mulder-replay") } }, { status: execution.ok ? 200 : execution.status });
     }
     if (url.pathname === "/__mulder/write-call" && request.method === "POST") {
+      if (env.LOCAL_APPROVAL_FIXTURE !== "true") return new Response("not found", { status: 404 });
       const session = cookieValue(request, "mulder_approval");
       if (!session) return Response.json({ error: "browser_unauthorized" }, { status: 401 });
       if (!env.INTENTS || !env.ORIGIN_URL) return Response.json({ error: "intent_binding_missing" }, { status: 503 });
@@ -170,8 +178,9 @@ export default {
     if (url.pathname === "/origin") return new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8" } });
     if (url.pathname.startsWith("/experiments/csp/")) {
       const variant = url.pathname.slice("/experiments/csp/".length);
+      const nonce = crypto.randomUUID().replaceAll("-", "");
       const policy = variant === "nonce"
-        ? "default-src 'none'; script-src 'nonce-mulder-fixture'; connect-src 'self'; style-src 'unsafe-inline'"
+        ? `default-src 'none'; script-src 'nonce-${nonce}'; connect-src 'self'; style-src 'unsafe-inline'`
         : variant === "hash"
           ? "default-src 'none'; script-src 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='; connect-src 'self'; style-src 'unsafe-inline'"
           : selfScriptPolicy;
@@ -180,7 +189,7 @@ export default {
       const injection = variant === "inline"
         ? webMcpBootstrap(tools)
         : variant === "nonce"
-          ? '<script type="module" nonce="mulder-fixture" src="/__mulder/bootstrap.js"></script>'
+          ? `<script type="module" nonce="${nonce}" src="/__mulder/bootstrap.js"></script>`
           : '<script type="module" src="/__mulder/bootstrap.js"></script>';
       return new HTMLRewriter().on("body", new BootstrapInjector(injection)).transform(origin);
     }

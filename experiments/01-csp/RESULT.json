@@ -48,9 +48,21 @@
       "sha256": "4fe222fd6b24ef13d3ded31d7793eced99634ec1bc8b87256d7a8031be2310e3"
     }
   },
-  "verdict": "nonce-preserved-and-passed-hash-only-preserved-and-blocked",
+  "verdict": "random-nonce-preserved-and-passed-hash-only-preserved-and-blocked",
   "nonce": {
-    "policy": "default-src 'none'; script-src 'nonce-mulder-fixture'; connect-src 'self'; style-src 'unsafe-inline'",
+    "samples": [
+      {
+        "policy": "default-src 'none'; script-src 'nonce-d85d6ae7e7f24dc69dd9bff4dc3e0668'; connect-src 'self'; style-src 'unsafe-inline'",
+        "nonceMatches": true,
+        "nonce": "d85d6ae7e7f24dc69dd9bff4dc3e0668"
+      },
+      {
+        "policy": "default-src 'none'; script-src 'nonce-cee241dcad21400f9840f7a9803bee95'; connect-src 'self'; style-src 'unsafe-inline'",
+        "nonceMatches": true,
+        "nonce": "cee241dcad21400f9840f7a9803bee95"
+      }
+    ],
+    "uniquePerResponse": true,
     "tool": {
       "name": "get_weather",
       "description": "Read the current weather for a city",
@@ -70,13 +82,14 @@
         },
         "required": [
           "city"
-        ]
+        ],
+        "additionalProperties": false
       },
       "annotations": {
         "readOnly": true,
         "untrustedContent": false
       },
-      "frameId": "B126AEB8AE33325DCCDB700221936D45",
+      "frameId": "8F2C39E98F6818199855FDE147401457",
       "stackTrace": {
         "callFrames": [
           {
@@ -89,7 +102,7 @@
         ]
       }
     },
-    "invocationId": "1DC1C8C3C90DD5CAE17CF7F5F58892A7",
+    "invocationId": "96FEB0EBEB11B721A49456BFAE7FB7B6",
     "status": "Completed",
     "output": {
       "status": 200,

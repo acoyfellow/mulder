@@ -51,7 +51,7 @@ echo "MULDER_FRESH_INSTALL_OK"
 
 ORIGIN_SECRET=$(openssl rand -hex 32)
 HUMAN_APPROVAL_SECRET=$(openssl rand -hex 32)
-printf 'ORIGIN_URL=http://127.0.0.1:8892\nORIGIN_SECRET=%s\nHUMAN_APPROVAL_SECRET=%s\n' "$ORIGIN_SECRET" "$HUMAN_APPROVAL_SECRET" > "$VARS_FILE"
+printf 'ORIGIN_URL=http://127.0.0.1:8892\nORIGIN_SECRET=%s\nHUMAN_APPROVAL_SECRET=%s\nLOCAL_APPROVAL_FIXTURE=true\n' "$ORIGIN_SECRET" "$HUMAN_APPROVAL_SECRET" > "$VARS_FILE"
 (
   cd "$CHECKOUT"
   exec env ORIGIN_SECRET="$ORIGIN_SECRET" ORIGIN_PORT=8892 bun experiments/04-credential-custody/origin.mjs
@@ -82,6 +82,7 @@ wait_url http://127.0.0.1:8891/__mulder/
 (
   cd "$CHECKOUT"
   BROWSER_PATH="$BROWSER_PATH" node proof/native-product.mjs
+  BROWSER_PATH="$BROWSER_PATH" ORIGIN_SECRET="$ORIGIN_SECRET" node proof/live-security.mjs
   BROWSER_PATH="$BROWSER_PATH" \
     WEBMCP_PROOF_MODULE="file://$CHECKOUT/proof/native-harness.mjs" \
     OUTPUT_PATH="$RESULT_PATH" \

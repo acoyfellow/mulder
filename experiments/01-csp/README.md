@@ -36,7 +36,7 @@ Screenshot: `external.png`
 
 Verifier: `node experiments/01-csp/verify.mjs`
 
-A nonce-only policy without `self` also passed without policy rewriting. Mulder copied the response's nonce onto the external bootstrap tag. Chrome discovered and invoked `get_weather`.
+A nonce-only policy without `self` also passed without policy rewriting. Mulder generated a fresh cryptographically random nonce for each transformed response and placed the same nonce in the policy and external bootstrap tag. Two control responses had different matching nonce values. Chrome discovered and invoked `get_weather`.
 
 A hash-only policy without `self` blocked the external bootstrap. Chrome emitted no tool discovery event. Mulder cannot add code under a hash-only policy unless the origin already includes Mulder's exact script hash or Cloudflare rewrites the policy.
 

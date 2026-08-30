@@ -26,4 +26,8 @@ if (packageJson.private !== true) throw new Error("research Worker must remain p
 const wrangler = readFileSync("wrangler.jsonc", "utf8");
 if (!wrangler.includes('"workers_dev": false') || !wrangler.includes('"preview_urls": false')) throw new Error("public deployment defaults enabled");
 if (!wrangler.includes('"class_name": "IntentDurableObject"')) throw new Error("durable approval binding missing");
+const worker = readFileSync("src/index.ts", "utf8");
+if (!worker.includes('LOCAL_APPROVAL_FIXTURE !== "true"') || !worker.includes('return new Response("not found", { status: 404 })')) throw new Error("local approval fixture is exposed by default");
+const compiler = readFileSync("src/openapi.ts", "utf8");
+if (!compiler.includes('normalizedMethod !== "get"') || !compiler.includes("generated tools are read-only")) throw new Error("mutating generated tools are not fail-closed");
 console.log("MULDER_PRODUCT_SECURITY_OK");

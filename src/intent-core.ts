@@ -30,3 +30,10 @@ export async function sha256(value: string): Promise<string> {
 export async function intentDigest(envelope: IntentEnvelope): Promise<string> {
   return sha256(canonicalize(envelope));
 }
+
+export function expiryDisposition(state: IntentState, expiresAt: number, now: number): "continue" | "expire" | "uncertain" {
+  if (now < expiresAt) return "continue";
+  if (state === "approved") return "expire";
+  if (state === "dispatching") return "uncertain";
+  return "continue";
+}
