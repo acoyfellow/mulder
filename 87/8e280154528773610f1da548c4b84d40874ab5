@@ -1,0 +1,23 @@
+proof/consumer/api.ts
+  s_9ea43334029fe9::t_20eccc338b9f71 1-16
+proof/consumer/index.ts
+  s_9ea43334029fe9::t_3fe7ba5ef56edf 1-33
+proof/consumer/tsconfig.json
+  s_9ea43334029fe9::t_750b213aef6f6e 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "878e280154528773610f1da548c4b84d40874ab5",
+  "prompts": {},
+  "sessions": {
+    "s_9ea43334029fe9": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a00c04-39b0-7c41-8f8c-319dfb49fbd0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
