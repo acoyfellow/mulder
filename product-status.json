@@ -1,31 +1,32 @@
 {
-  "state": "product-ready",
-  "goal": "Release-ready secure WebMCP companion page for the documented read-only OpenAPI subset.",
+  "state": "installable-release-candidate",
+  "goal": "A secure WebMCP companion package for the documented read-only OpenAPI subset can be installed and used by an independent Worker.",
   "completed": [
-    "Committed a public-registry lockfile and proved an isolated frozen install.",
+    "Committed a public-registry lockfile and proved an isolated frozen producer install.",
     "Documented and enforced a fail-closed read-only OpenAPI 3.1 subset.",
-    "Rejected unsupported path serialization and every generated mutating operation.",
     "Validated full tool input before origin dispatch with a zero-dispatch denial test.",
-    "Moved write-intent test state and terminal results to per-intent Durable Objects.",
-    "Bound approval digests to the complete immutable authority envelope.",
-    "Proved concurrent approval yields one logical effect at an idempotent origin.",
-    "Proved terminal replay survives a local Wrangler restart.",
-    "Prevented approved or uncertain intents from starting a late dispatch after expiry.",
-    "Disabled the local approval fixture unless an explicit local-only variable is true.",
-    "Replaced the constant CSP nonce with fresh per-response random nonces.",
-    "Added live release-gate replays for CSP, credential custody, edge denial, native calls, and durable approval.",
-    "Closed all six findings from the final adversarial security review.",
-    "Passed proof/product-ready.sh from a clean committed tree."
+    "Closed all six findings from the product-readiness security review.",
+    "Extracted fixture-free compiler, bootstrap, and companion routing modules.",
+    "Added one ESM package export with bundled JavaScript and generated declarations.",
+    "Added a package file allowlist with no runtime dependencies or source files.",
+    "Packed the artifact from a disposable archived checkout and recorded its SHA-256.",
+    "Installed the artifact as a real directory in a sterile consumer outside the producer repository.",
+    "Proved every non-artifact consumer dependency resolves to registry.npmjs.org with integrity.",
+    "Proved the installed package has zero production dependency vulnerabilities.",
+    "Denied producer-source reads for the consumer runtime and passed the negative control.",
+    "Proved a real Chrome native WebMCP call reached exactly one consumer-owned unchanged API route.",
+    "Proved the consumer API source remained byte-for-byte unchanged.",
+    "Passed consumer TypeScript compilation and Wrangler deploy dry-run bundle inspection."
   ],
   "remaining": [],
   "excluded": [
     "Public deployment",
     "Remote creation",
+    "npm publication",
     "General OpenAPI support",
     "Generated mutating tools",
-    "Crash-safe writes to origins without idempotency",
     "Production human identity integration",
     "Native WebMCP agent identity"
   ],
-  "proof": "bash proof/product-ready.sh"
+  "proof": "bash proof/consumer-release.sh"
 }

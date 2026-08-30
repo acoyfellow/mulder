@@ -34,6 +34,12 @@ The repository contains a durable write-approval primitive for later integration
 
 The checked local flow uses a separate test secret and does not claim verified human identity. A production integration must authenticate a human through Access or another verified identity provider before it supplies the decision subject. The production approval route stays out of the supported product surface until that integration exists.
 
+## Package boundary
+
+The package exports `createWebMcpCompanion`, `injectWebMcpBootstrap`, and the public companion and OpenAPI types from one ESM entry point. It has no runtime dependencies. The consumer owns its OpenAPI document, HTML response, API implementation, credentials, and dispatch function. Mulder owns compilation, native registration source, input validation, and guarded routing.
+
+The package does not export the demonstration Worker, fixtures, experiments, or Durable Object write primitive.
+
 ## Runtime enforcement
 
 The edge validates the full input before it constructs or dispatches an origin request. Validation rejects missing values, unexpected properties, wrong types, invalid enums, bounds, lengths, and patterns. A validation failure creates zero origin dispatches.

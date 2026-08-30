@@ -4,7 +4,7 @@
 
 Mulder gives a supported OpenAPI 3.1 API a same-origin native WebMCP companion page at Cloudflare's edge. Explicitly enabled operations become tools. The API implementation does not change. Unsupported semantics fail compilation instead of becoming weaker tools.
 
-This is a local, private release candidate. It has no remote and no public deployment.
+This is a local, private installable release candidate. It has no remote and no public deployment. The package remains marked private so an explicit publication decision is still required.
 
 ## First result
 
@@ -12,7 +12,30 @@ Chrome 151 discovered `get_weather` as a native read-only WebMCP tool. It did no
 
 The checked receipt is in `proof/native.json`. Its screenshot is `proof/native.png`.
 
-## Try it
+## Install the artifact
+
+Build and pack the ESM library:
+
+```bash
+bun run build
+npm pack --ignore-scripts
+```
+
+A Worker imports only the public package entry point:
+
+```ts
+import { createWebMcpCompanion } from "mulder";
+
+const companion = createWebMcpCompanion({
+  document: openApiDocument,
+  renderPage: () => new Response(companionHtml, { headers: { "content-type": "text/html" } }),
+  dispatch: (request) => unchangedApplicationFetch(request),
+});
+```
+
+The tarball contains the bundled runtime, declarations, license, and product documentation. It excludes source files, fixtures, experiments, tests, and the Mulder demonstration Worker.
+
+## Try the demonstration Worker
 
 ```bash
 bun install
@@ -59,6 +82,12 @@ The release-readiness gate creates a fresh archived checkout, installs only from
 
 ```bash
 bash proof/product-ready.sh
+```
+
+The independent-consumer gate packs the artifact, deletes its build checkout, installs it outside this repository, denies producer-source reads, runs a consumer-owned API, invokes it through native Chrome WebMCP, and inspects a Wrangler dry-run bundle:
+
+```bash
+bash proof/consumer-release.sh
 ```
 
 The checks prove native discovery, invocation, response, visible state, credential custody, input denial before origin dispatch, durable approval, idempotent logical execution, and screenshot integrity. They also prove that `erase_weather` remains absent.
