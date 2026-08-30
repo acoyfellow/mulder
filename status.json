@@ -1,6 +1,6 @@
 {
   "state": "experimenting",
-  "iteration": 9,
+  "iteration": 10,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
     "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
@@ -12,7 +12,8 @@
     "A native call reached a separately protected unchanged origin while the random origin credential remained only in the edge binding and protected subrequest.",
     "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent echo origin.",
     "The edge can verify a server-issued HttpOnly browser session independently of tool input.",
-    "An edge policy denied a native call before any protected-origin request, while an allowed control incremented the independent origin counter exactly once."
+    "An edge policy denied a native call before any protected-origin request, while an allowed control incremented the independent origin counter exactly once.",
+    "A native write remained pending at zero origin calls, exact separate approval executed it once, and a replay returned 409 without another origin call."
   ],
   "falsified": [
     "Inline script injection works on a page with script-src self.",
@@ -23,10 +24,9 @@
   ],
   "notProven": [
     "CSP policies that require a nonce or hash and do not allow self",
-    "Approval for writes",
     "Specification drift",
     "Tool-count limits"
   ],
-  "currentExperiment": "06-write-approval",
-  "nextAction": "Test one immutable write intent through pending, approval, one execution, and replay denial."
+  "currentExperiment": "08-specification-drift",
+  "nextAction": "Observe native tool addition, schema change behavior, and removal while one page remains open."
 }

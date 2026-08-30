@@ -9,7 +9,7 @@ let unauthorizedCount = 0;
 const server = Bun.serve({
   hostname: "127.0.0.1",
   port: Number(process.env.ORIGIN_PORT ?? "8892"),
-  fetch(request) {
+  async fetch(request) {
     const url = new URL(request.url);
     if (url.pathname === "/ledger") return Response.json({ authorizedCount, unauthorizedCount, credentialFingerprint: fingerprint });
     if (url.pathname === "/reset" && request.method === "POST") {
@@ -18,12 +18,14 @@ const server = Bun.serve({
       return Response.json({ ok: true });
     }
     const match = url.pathname.match(/^\/weather\/([^/]+)$/);
-    if (!match) return Response.json({ error: "not_found" }, { status: 404 });
+    const write = url.pathname === "/write" && request.method === "POST";
+    if (!match && !write) return Response.json({ error: "not_found" }, { status: 404 });
     if (request.headers.get("authorization") !== `Bearer ${secret}`) {
       unauthorizedCount += 1;
       return Response.json({ error: "origin_unauthorized" }, { status: 401 });
     }
     authorizedCount += 1;
+    if (write) return Response.json({ written: await request.json(), source: "protected-unchanged-origin", requestNumber: authorizedCount });
     return Response.json({ city: decodeURIComponent(match[1]), temperature: 23, source: "protected-unchanged-origin", requestNumber: authorizedCount });
   },
 });

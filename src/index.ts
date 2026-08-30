@@ -1,3 +1,4 @@
+import { approvalExperimentModule, approvalExperimentPage } from "./approval-experiment";
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
 import { custodyExperimentModule, custodyExperimentPage } from "./custody-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
@@ -7,10 +8,13 @@ import { schemaExperimentModule, schemaExperimentPage } from "./schema-experimen
 
 const tools = generateTools(fixtureDocument);
 const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
+let approvalSession = "";
 let custodySession = "";
 let identitySession = "";
+const writeIntents = new Map<string, { state: "pending" | "approved" | "executing" | "consumed" | "expired"; input: Record<string, unknown> }>();
 
 type Env = {
+  HUMAN_APPROVAL_SECRET?: string;
   ORIGIN_SECRET?: string;
   ORIGIN_URL?: string;
 };
@@ -44,6 +48,43 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/approval") {
+      approvalSession = crypto.randomUUID();
+      return new Response(approvalExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_approval=${approvalSession}; HttpOnly; SameSite=Strict; Path=/` } });
+    }
+    if (url.pathname === "/experiments/approval/module.js") return new Response(approvalExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
+    if (url.pathname === "/__mulder/intents" && request.method === "GET") {
+      return Response.json({ intents: [...writeIntents].map(([digest, intent]) => ({ digest, state: intent.state })) });
+    }
+    if (url.pathname === "/__mulder/approve" && request.method === "POST") {
+      if (!env.HUMAN_APPROVAL_SECRET || request.headers.get("x-human-approval") !== env.HUMAN_APPROVAL_SECRET) return Response.json({ error: "human_unauthorized" }, { status: 401 });
+      const body = await request.json() as { digest?: string };
+      const intent = body.digest ? writeIntents.get(body.digest) : undefined;
+      if (!intent || intent.state !== "pending") return Response.json({ error: "intent_not_pending" }, { status: 409 });
+      intent.state = "approved";
+      return Response.json({ digest: body.digest, state: intent.state });
+    }
+    if (url.pathname === "/__mulder/write-call" && request.method === "POST") {
+      const browserVerified = request.headers.get("cookie")?.split(";").map((part) => part.trim()).includes(`mulder_approval=${approvalSession}`) === true;
+      if (!browserVerified) return Response.json({ error: "browser_unauthorized" }, { status: 401 });
+      if (!env.ORIGIN_SECRET || !env.ORIGIN_URL) return Response.json({ error: "origin_binding_missing" }, { status: 503 });
+      const input = await request.json() as Record<string, unknown>;
+      const bytes = new TextEncoder().encode(JSON.stringify(input));
+      const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((value) => value.toString(16).padStart(2, "0")).join("");
+      if (writeIntents.has(digest)) return Response.json({ error: "intent_replay", digest }, { status: 409 });
+      const intent: { state: "pending" | "approved" | "executing" | "consumed" | "expired"; input: Record<string, unknown> } = { state: "pending", input };
+      writeIntents.set(digest, intent);
+      const deadline = Date.now() + 15_000;
+      while (intent.state === "pending" && Date.now() < deadline) await new Promise((resolve) => setTimeout(resolve, 25));
+      if (intent.state !== "approved") {
+        writeIntents.set(digest, { ...intent, state: "expired" });
+        return Response.json({ error: "approval_timeout", digest }, { status: 408 });
+      }
+      writeIntents.set(digest, { ...intent, state: "executing" });
+      const response = await fetch(`${env.ORIGIN_URL}/write`, { method: "POST", headers: { authorization: `Bearer ${env.ORIGIN_SECRET}`, "content-type": "application/json" }, body: JSON.stringify(input) });
+      writeIntents.set(digest, { ...intent, state: "consumed" });
+      return new Response(response.body, { status: response.status, headers: { "content-type": "application/json", "x-mulder-intent": digest } });
+    }
     if (url.pathname === "/experiments/identity") {
       identitySession = crypto.randomUUID();
       return new Response(identityExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_identity=${identitySession}; HttpOnly; SameSite=Strict; Path=/` } });

@@ -1,0 +1,67 @@
+{
+  "schema": "mulder.write-approval.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc",
+  "pending": {
+    "originLedger": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
+    }
+  },
+  "unauthorizedApproval": {
+    "status": 401,
+    "originLedger": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
+    }
+  },
+  "approval": {
+    "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc",
+    "state": "approved"
+  },
+  "approved": {
+    "invocationId": "5C179AFCB1D43FB001A379D76B205D69",
+    "status": "Completed",
+    "output": {
+      "status": 200,
+      "body": {
+        "written": {
+          "classification": "secret",
+          "title": "Project Mulder"
+        },
+        "source": "protected-unchanged-origin",
+        "requestNumber": 1
+      }
+    },
+    "visible": "{\"status\":200,\"body\":{\"written\":{\"classification\":\"secret\",\"title\":\"Project Mulder\"},\"source\":\"protected-unchanged-origin\",\"requestNumber\":1}}",
+    "originLedger": {
+      "authorizedCount": 1,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
+    },
+    "intentState": "consumed",
+    "screenshot": {
+      "path": "experiments/06-write-approval/native.png",
+      "sha256": "fdf554280ad675bd78a95b69929af2c74c56372ccc27e3f3da469457dea63150"
+    }
+  },
+  "replay": {
+    "invocationId": "FEC87F0248E07D2CBC0CB8C25F8324B9",
+    "status": "Completed",
+    "output": {
+      "status": 409,
+      "body": {
+        "error": "intent_replay",
+        "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc"
+      }
+    },
+    "originLedger": {
+      "authorizedCount": 1,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
+    }
+  },
+  "verdict": "pass"
+}

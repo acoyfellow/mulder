@@ -4,7 +4,7 @@
   {"id":"03-schema-compatibility","state":"proven","receipt":"experiments/03-schema-compatibility/RESULT.json","verifier":"experiments/03-schema-compatibility/verify.mjs"},
   {"id":"04-credential-custody","state":"proven","receipt":"experiments/04-credential-custody/RESULT.json","verifier":"experiments/04-credential-custody/verify.mjs"},
   {"id":"05-request-fidelity","state":"partial","receipt":"experiments/05-request-fidelity/RESULT.json","verifier":"experiments/05-request-fidelity/verify.mjs"},
-  {"id":"06-write-approval","state":"unrun"},
+  {"id":"06-write-approval","state":"proven","receipt":"experiments/06-write-approval/RESULT.json","verifier":"experiments/06-write-approval/verify.mjs"},
   {"id":"07-principal-identity","state":"falsified","receipt":"experiments/07-principal-identity/RESULT.json","verifier":"experiments/07-principal-identity/verify.mjs"},
   {"id":"08-specification-drift","state":"unrun"},
   {"id":"09-tool-count-limits","state":"unrun"},
