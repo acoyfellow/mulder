@@ -1,6 +1,8 @@
 node_modules
 dist/
 *.tgz
+demo/*.mp4
+demo/*.webm
 .wrangler/
 .guardrail/
 .dev.vars
