@@ -6,6 +6,22 @@ Mulder gives a supported OpenAPI 3.1 API a same-origin native WebMCP companion p
 
 This is a local, private installable release candidate. It has no remote and no public deployment. The package remains marked private so an explicit publication decision is still required.
 
+## Product website
+
+The website is the canonical product introduction, tutorial, example library, security guide, browser support guide, and API reference.
+
+```bash
+bun run site:dev
+```
+
+Open <http://127.0.0.1:8895>. The local site includes the checked private-beta package artifact and downloadable starter used by its quickstart.
+
+The website-readiness gate builds every route, runs all four examples, checks desktop and mobile rendering, downloads only the published tutorial assets into an empty consumer, and completes one native Chrome WebMCP call:
+
+```bash
+bash proof/website-ready.sh
+```
+
 ## First result
 
 Chrome 151 discovered `get_weather` as a native read-only WebMCP tool. It did not discover the disabled `erase_weather` operation. A native call reached the unchanged API handler, returned Lisbon at 19°C, and changed the visible page.

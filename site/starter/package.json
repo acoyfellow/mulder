@@ -1,0 +1,17 @@
+{
+  "name": "my-first-mulder-tool",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "mulder": "file:./mulder-0.1.0.tgz"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260527.1",
+    "typescript": "6.0.3",
+    "wrangler": "4.95.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "dev": "wrangler dev --port 8896 --inspector-port 0"
+  }
+}

@@ -17,6 +17,8 @@
     "build": "rm -rf dist && esbuild src/public.ts --bundle --format=esm --platform=browser --outfile=dist/public.js && tsc -p tsconfig.build.json",
     "prepack": "bun run build",
     "dev": "wrangler dev --port 8891 --inspector-port 0",
+    "site:build": "bash site/build.sh",
+    "site:dev": "bun run site:build && wrangler dev --config site/wrangler.jsonc --port 8895 --inspector-port 0",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "proof": "node proof/verify.mjs && node experiments/01-csp/verify.mjs && node experiments/02-api-without-document/verify.mjs && node experiments/03-schema-compatibility/verify.mjs && node experiments/04-credential-custody/verify.mjs && node experiments/05-request-fidelity/verify.mjs && node experiments/06-write-approval/verify.mjs && node experiments/07-principal-identity/verify.mjs && node experiments/08-specification-drift/verify.mjs && node experiments/09-tool-count-limits/verify.mjs && node experiments/10-edge-denial/verify.mjs",

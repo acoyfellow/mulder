@@ -1,0 +1,7 @@
+{
+  "name": "my-first-mulder-tool",
+  "main": "index.ts",
+  "compatibility_date": "2026-05-27",
+  "workers_dev": false,
+  "preview_urls": false
+}

@@ -163,6 +163,14 @@ async function runWebMcpProof(options) {
     await send("Page.enable");
     await send("Runtime.enable");
     await send("WebMCP.enable");
+    if (options.viewport) {
+      await send("Emulation.setDeviceMetricsOverride", {
+        width: options.viewport.width,
+        height: options.viewport.height,
+        deviceScaleFactor: options.viewport.deviceScaleFactor ?? 1,
+        mobile: options.viewport.mobile ?? false
+      });
+    }
     await send("Page.navigate", { url: options.url });
     await waitEvent("Page.loadEventFired");
     const required = new Set(options.requiredToolNames ?? options.calls.map(({ toolName }) => toolName));
