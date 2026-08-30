@@ -37,6 +37,7 @@ cat > "$TARGET/consumer/package.json" <<JSON
   "dependencies": { "mulder": "file:$ARTIFACT" },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260527.1",
+    "agent-browser": "0.35.1",
     "typescript": "6.0.3",
     "unsurf": "0.4.0",
     "wrangler": "4.95.0"
@@ -47,6 +48,7 @@ rm -rf "$TARGET/producer"
 (
   cd "$TARGET/consumer"
   HOME="$TARGET/home" NPM_CONFIG_CACHE="$TARGET/cache" NPM_CONFIG_REGISTRY=https://registry.npmjs.org npm install --ignore-scripts >/dev/null
+  HOME="$TARGET/home" ./node_modules/.bin/agent-browser install >/dev/null
 )
 [[ -d "$TARGET/consumer/node_modules/mulder" && ! -L "$TARGET/consumer/node_modules/mulder" ]]
 API_SHA=$(shasum -a 256 "$TARGET/consumer/api.ts" | awk '{print $1}')
@@ -67,7 +69,7 @@ curl -fsS "$URL" | grep -F 'Waiting for the native call' >/dev/null
 READY="$TARGET/recording-ready"
 (
   cd "$TARGET/consumer"
-  DEMO_URL="$URL" VIDEO_OUTPUT="$WEBM" RECORDING_READY="$READY" node record-polished-demo.mjs
+  PATH="$TARGET/consumer/node_modules/.bin:$PATH" DEMO_URL="$URL" VIDEO_OUTPUT="$WEBM" RECORDING_READY="$READY" node record-polished-demo.mjs
 ) > "$TARGET/recording.log" 2>&1 &
 RECORD_PID=$!
 for _ in $(seq 1 120); do [[ -f "$READY" ]] && break; kill -0 "$RECORD_PID" 2>/dev/null || { cat "$TARGET/recording.log" >&2; exit 1; }; sleep .25; done
