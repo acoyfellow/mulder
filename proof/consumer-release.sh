@@ -49,7 +49,7 @@ if (manifest.dependencies && Object.keys(manifest.dependencies).length) throw ne
 NODE
 while IFS= read -r file; do
   case "$file" in
-    package/package.json|package/LICENSE|package/README.md|package/SUPPORT.md|package/dist/*.js|package/dist/*.d.ts) ;;
+    package/package.json|package/LICENSE|package/README.md|package/SUPPORT.md|package/dist|package/dist/*.js|package/dist/*.d.ts) ;;
     *) echo "unexpected artifact file: $file" >&2; exit 1 ;;
   esac
 done < <(tar -tzf "$ARTIFACT" | sed 's:/$::' | grep -v '^package$')
