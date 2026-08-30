@@ -1,0 +1,31 @@
+experiments/01-csp/RESULT.json
+  s_5fe3591d60297c::t_266157f4a7af10 51-109
+experiments/09-tool-count-limits/RESULT.json
+  s_0a87e8fcc24611::t_823ec6d4ea7034 1-94
+src/count-experiment.ts
+  s_0a87e8fcc24611::t_de98e5f294d598 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d4252be8652e821ab73dd0aaa2db360a53fb1a59",
+  "prompts": {},
+  "sessions": {
+    "s_0a87e8fcc24611": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a038fe-d370-7a9e-b05c-ce3bd6601a10",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    },
+    "s_5fe3591d60297c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019fd866-e69a-76ed-8232-4f273583c9fe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
