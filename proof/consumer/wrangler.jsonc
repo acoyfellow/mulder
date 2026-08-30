@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mulder-clean-consumer",
+  "main": "index.ts",
+  "compatibility_date": "2026-06-02",
+  "workers_dev": false,
+  "preview_urls": false,
+  "upload_source_maps": true
+}
