@@ -61,7 +61,7 @@ ORIGIN_PID=$!
 start_worker() {
   (
     cd "$CHECKOUT"
-    HOME="$HOME_DIR" BUN_INSTALL_CACHE_DIR="$CACHE_DIR" bunx wrangler --env-file "$VARS_FILE" dev --port 8891 --inspector-port 0
+    HOME="$HOME_DIR" BUN_INSTALL_CACHE_DIR="$CACHE_DIR" bunx wrangler dev --env-file "$VARS_FILE" --port 8891 --inspector-port 0
   ) >"$WORKER_LOG" 2>&1 &
   WORKER_PID=$!
 }
