@@ -1,0 +1,19 @@
+experiments/06-write-approval/RESULT.json
+  s_5fe3591d60297c::t_2e5a1a02bfb582 2-85,88-97,99-102,105-107,110-111,114-117,119-138,141-170,172-386,390-409,412-426,428-430,433-463
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "1ca2f263a2c66d72426f8e39d0d81e96d48d22c9",
+  "prompts": {},
+  "sessions": {
+    "s_5fe3591d60297c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019fd866-e69a-76ed-8232-4f273583c9fe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
