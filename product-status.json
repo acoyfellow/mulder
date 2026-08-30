@@ -1,0 +1,27 @@
+{
+  "state": "hardening",
+  "goal": "Release-ready secure WebMCP companion page for the documented OpenAPI subset.",
+  "completed": [
+    "Committed public-registry lockfile and proved an isolated frozen install.",
+    "Documented and enforced a fail-closed OpenAPI 3.1 subset.",
+    "Validated full tool input before origin dispatch with a zero-dispatch denial test.",
+    "Moved write intents and terminal results to per-intent Durable Objects.",
+    "Bound approval digests to the complete immutable authority envelope.",
+    "Proved concurrent approval yields one logical effect at an idempotent origin.",
+    "Proved terminal replay survives a local Wrangler restart."
+  ],
+  "remaining": [
+    "Create proof/product-ready.sh with a fresh isolated public-registry install.",
+    "Replay native Chrome discovery and invocation from the product gate.",
+    "Replay request fidelity and durable approval from the product gate.",
+    "Run a final security audit and close material findings.",
+    "Make the product-ready gate pass from a clean committed tree."
+  ],
+  "excluded": [
+    "Public deployment",
+    "Remote creation",
+    "General OpenAPI support",
+    "Crash-safe writes to origins without idempotency",
+    "Native WebMCP agent identity"
+  ]
+}

@@ -26,6 +26,12 @@ Mulder fails closed. An explicitly enabled operation is not published when its m
 - Missing schemas, unmatched path templates, duplicate names, and the reserved parameter name `body`.
 - Object schemas that permit undeclared properties.
 
+## Approval-managed writes
+
+A write that needs approval must declare an origin idempotency contract. The origin must collapse every retry with the same tenant and Mulder intent ID into one logical effect and one stable result. Mulder does not claim crash-safe execution for an arbitrary write API without that contract.
+
+Each write intent uses a server-generated Durable Object. Its digest binds the tenant, operation version, method, target, exact body bytes, policy version, credential profile, browser session commitment, and expiry. A separate verified human decision approves that immutable envelope. Terminal retries return the stored result.
+
 ## Runtime enforcement
 
 The edge validates the full input before it constructs or dispatches an origin request. Validation rejects missing values, unexpected properties, wrong types, invalid enums, bounds, lengths, and patterns. A validation failure creates zero origin dispatches.

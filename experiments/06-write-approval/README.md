@@ -1,31 +1,37 @@
-# Experiment 06: Write approval
+# Experiment 06: Durable write approval
 
-Status: proven locally
+Status: proven locally with a Durable Object and an idempotent origin
 
 ## Question
 
-Can reads remain immediate while a generated write waits for separate human approval and executes exactly once?
+Can a native write create a durable immutable intent, wait for separate human approval, execute one logical effect, and recover safely after Worker restart?
 
 ## Method
 
-A native write call creates an immutable SHA-256 intent and waits. A separate approval route requires a secret unavailable to the page and tool input. A protected independent origin keeps a monotonic write counter.
+A native call creates an opaque server-generated intent ID. One Durable Object stores its immutable outbound envelope, digest, browser-session commitment, policy version, credential profile, expiry, decision, state, and terminal result.
+
+A separate approval route authenticates the local human fixture. Approval must contain the exact displayed digest and a decision ID. Execution uses only the stored envelope and sends the intent ID as an origin idempotency key.
 
 ## Result
 
-The native write remained pending while the origin counter stayed at zero. An approval with the wrong human credential returned 401 and left the counter unchanged.
+- The native call returned `202 pending` and caused zero origin requests.
+- Unauthorized approval returned 401 and caused zero origin requests.
+- Eight concurrent copies of the same exact approval all completed with one origin idempotency key and one logical effect.
+- Concurrent recovery caused four physical origin transmissions. The idempotent origin collapsed them into one logical effect.
+- Repeating the same decision after completion returned the stored terminal result without another origin request.
+- A different later decision returned 409.
+- Wrangler was stopped and restarted. Repeating the original decision still returned the stored result. Origin request and logical-effect counters remained one.
 
-Approval of the exact intent digest released the waiting native call. The protected origin executed once, returned 200, and the intent became consumed.
+## Product boundary
 
-A second native call with the same body produced the same digest, returned 409 `intent_replay`, and left the origin counter at one.
+Crash-safe retry requires the origin to honor an idempotency key or deterministic resource identifier. An unchanged API without that behavior cannot guarantee one logical side effect after an uncertain network outcome. Mulder must reject approval-managed writes unless the origin declares this contract.
 
-## Boundary
-
-This proves the state transition locally. The approval channel uses a test secret rather than Access or WebAuthn. Concurrent replay, rejection, expiry, modified bodies, and crash recovery remain outside this result.
+The local human fixture uses a separate shared secret. Production human identity remains an integration boundary for Access or another verified identity provider. Native frame and invocation IDs are not treated as agent identity.
 
 Receipt: `RESULT.json`
 
 Screenshot: `native.png`
 
-Native runner: `native-call.mjs`
+Capture: `native-call.mjs`
 
 Verifier: `node experiments/06-write-approval/verify.mjs`

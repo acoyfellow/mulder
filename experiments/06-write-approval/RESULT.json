@@ -1,67 +1,464 @@
 {
-  "schema": "mulder.write-approval.v0",
-  "browser": "Chrome/151.0.7922.34",
-  "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc",
-  "pending": {
-    "originLedger": {
-      "authorizedCount": 0,
-      "unauthorizedCount": 0,
-      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
-    }
-  },
-  "unauthorizedApproval": {
-    "status": 401,
-    "originLedger": {
-      "authorizedCount": 0,
-      "unauthorizedCount": 0,
-      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
-    }
-  },
-  "approval": {
-    "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc",
-    "state": "approved"
-  },
-  "approved": {
-    "invocationId": "5C179AFCB1D43FB001A379D76B205D69",
-    "status": "Completed",
-    "output": {
-      "status": 200,
-      "body": {
-        "written": {
-          "classification": "secret",
-          "title": "Project Mulder"
+  "schema": "mulder.durable-approval.v1",
+  "verdict": "pass",
+  "native": {
+    "schema": "webmcp-proof.v0",
+    "browser": "Chrome/151.0.7922.34",
+    "url": "http://127.0.0.1:8891/experiments/approval",
+    "featureNames": [
+      "WebMCP",
+      "DevToolsWebMCPSupport"
+    ],
+    "tools": [
+      {
+        "name": "create_case_file",
+        "description": "Create one protected case file after separate human approval",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "classification": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "classification"
+          ]
         },
-        "source": "protected-unchanged-origin",
-        "requestNumber": 1
+        "annotations": {
+          "readOnly": false,
+          "untrustedContent": false
+        },
+        "frameId": "735B6D7B5CD3F02A0F6AD30B81AD1440",
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8891/experiments/approval/module.js",
+              "lineNumber": 2,
+              "columnNumber": 25
+            }
+          ]
+        }
       }
-    },
-    "visible": "{\"status\":200,\"body\":{\"written\":{\"classification\":\"secret\",\"title\":\"Project Mulder\"},\"source\":\"protected-unchanged-origin\",\"requestNumber\":1}}",
-    "originLedger": {
-      "authorizedCount": 1,
-      "unauthorizedCount": 0,
-      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
-    },
-    "intentState": "consumed",
+    ],
+    "calls": [
+      {
+        "invocationId": "005B5A0D981068C8C5E8BFD839AA4360",
+        "invoked": {
+          "toolName": "create_case_file",
+          "frameId": "735B6D7B5CD3F02A0F6AD30B81AD1440",
+          "invocationId": "005B5A0D981068C8C5E8BFD839AA4360",
+          "input": "{\"classification\":\"secret\",\"title\":\"Project Mulder\"}"
+        },
+        "responded": {
+          "invocationId": "005B5A0D981068C8C5E8BFD839AA4360",
+          "status": "Completed",
+          "output": {
+            "status": 202,
+            "body": {
+              "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+              "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+              "state": "pending",
+              "expiresAt": 1788059087838
+            }
+          }
+        },
+        "output": {
+          "status": 202,
+          "body": {
+            "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+            "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+            "state": "pending",
+            "expiresAt": 1788059087838
+          }
+        }
+      }
+    ],
+    "inspected": "{\"status\":202,\"body\":{\"id\":\"a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c\",\"digest\":\"f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e\",\"state\":\"pending\",\"expiresAt\":1788059087838}}",
     "screenshot": {
       "path": "experiments/06-write-approval/native.png",
-      "sha256": "fdf554280ad675bd78a95b69929af2c74c56372ccc27e3f3da469457dea63150"
+      "sha256": "07c6d6a16e261b7cedcb937122df90915bc6db7df65e84b7fed3bb5a7d0baf77"
+    }
+  },
+  "intentId": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+  "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+  "ledgerAfterCreate": {
+    "authorizedCount": 0,
+    "unauthorizedCount": 0,
+    "logicalEffectCount": 0,
+    "idempotencyKeys": 0,
+    "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+  },
+  "unauthorized": {
+    "status": 401,
+    "body": {
+      "error": "human_unauthorized"
+    },
+    "ledger": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "logicalEffectCount": 0,
+      "idempotencyKeys": 0,
+      "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+    }
+  },
+  "approvalRace": [
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "approved"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1
+          },
+          "replay": null
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "dispatching"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": null
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "dispatching"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": null
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "dispatching"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": null
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "succeeded"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": "stored"
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "succeeded"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": "stored"
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "succeeded"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": "stored"
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "approval": {
+          "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+          "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+          "state": "succeeded"
+        },
+        "execution": {
+          "status": 200,
+          "body": {
+            "written": {
+              "classification": "secret",
+              "title": "Project Mulder"
+            },
+            "source": "protected-idempotent-origin",
+            "requestNumber": 1,
+            "logicalEffectNumber": 1,
+            "replayed": true
+          },
+          "replay": "stored"
+        }
+      },
+      "ledger": {
+        "authorizedCount": 4,
+        "unauthorizedCount": 0,
+        "logicalEffectCount": 1,
+        "idempotencyKeys": 1,
+        "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+      }
+    }
+  ],
+  "approved": {
+    "status": 200,
+    "body": {
+      "approval": {
+        "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+        "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+        "state": "approved"
+      },
+      "execution": {
+        "status": 200,
+        "body": {
+          "written": {
+            "classification": "secret",
+            "title": "Project Mulder"
+          },
+          "source": "protected-idempotent-origin",
+          "requestNumber": 1,
+          "logicalEffectNumber": 1
+        },
+        "replay": null
+      }
+    },
+    "ledger": {
+      "authorizedCount": 4,
+      "unauthorizedCount": 0,
+      "logicalEffectCount": 1,
+      "idempotencyKeys": 1,
+      "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
     }
   },
   "replay": {
-    "invocationId": "FEC87F0248E07D2CBC0CB8C25F8324B9",
-    "status": "Completed",
-    "output": {
-      "status": 409,
-      "body": {
-        "error": "intent_replay",
-        "digest": "283a77f8e9ad6826bcbec7bb25eb27e6731f3409ea41c5d6c4bcea5d68b875bc"
+    "status": 200,
+    "body": {
+      "approval": {
+        "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+        "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+        "state": "succeeded"
+      },
+      "execution": {
+        "status": 200,
+        "body": {
+          "written": {
+            "classification": "secret",
+            "title": "Project Mulder"
+          },
+          "source": "protected-idempotent-origin",
+          "requestNumber": 1,
+          "logicalEffectNumber": 1,
+          "replayed": true
+        },
+        "replay": "stored"
       }
     },
-    "originLedger": {
-      "authorizedCount": 1,
+    "ledger": {
+      "authorizedCount": 4,
       "unauthorizedCount": 0,
-      "credentialFingerprint": "31a5dbf9a6c8eff23998b2c3b5339323585e1ae99ef635824fb30bd3ea09d146"
+      "logicalEffectCount": 1,
+      "idempotencyKeys": 1,
+      "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
     }
   },
-  "verdict": "pass"
+  "conflictingDecision": {
+    "status": 409,
+    "body": {
+      "error": "intent_not_pending"
+    },
+    "ledger": {
+      "authorizedCount": 4,
+      "unauthorizedCount": 0,
+      "logicalEffectCount": 1,
+      "idempotencyKeys": 1,
+      "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+    }
+  },
+  "restartReplay": {
+    "status": 200,
+    "body": {
+      "approval": {
+        "id": "a5d1df40739d2c2c87e83f9ada7f26f6221084a95456087d75f145500aa5368c",
+        "digest": "f394bdbca7cc79fa943fe7dc8652e38f410f29067f479c2971ee4b21f560fb2e",
+        "state": "succeeded"
+      },
+      "execution": {
+        "status": 200,
+        "body": {
+          "written": {
+            "classification": "secret",
+            "title": "Project Mulder"
+          },
+          "source": "protected-idempotent-origin",
+          "requestNumber": 1,
+          "logicalEffectNumber": 1,
+          "replayed": true
+        },
+        "replay": "stored"
+      }
+    },
+    "ledger": {
+      "authorizedCount": 4,
+      "unauthorizedCount": 0,
+      "logicalEffectCount": 1,
+      "idempotencyKeys": 1,
+      "credentialFingerprint": "ccb87621a5b4262c6e1074333e7716f84f8639d9b0cd26d3d8a51251ca08b851"
+    }
+  }
 }

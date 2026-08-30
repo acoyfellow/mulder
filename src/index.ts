@@ -5,21 +5,33 @@ import { custodyExperimentModule, custodyExperimentPage } from "./custody-experi
 import { driftExperimentModule, driftExperimentPage } from "./drift-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { identityExperimentModule, identityExperimentPage } from "./identity-experiment";
+import { IntentDurableObject, sha256, type IntentEnvelope } from "./intent";
 import { executeTool, generateTools } from "./openapi";
+
+export { IntentDurableObject };
 import { schemaExperimentModule, schemaExperimentPage } from "./schema-experiment";
 
 const tools = generateTools(fixtureDocument);
 const selfScriptPolicy = "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'";
-let approvalSession = "";
 let custodySession = "";
 let identitySession = "";
-const writeIntents = new Map<string, { state: "pending" | "approved" | "executing" | "consumed" | "expired"; input: Record<string, unknown> }>();
 
 type Env = {
   HUMAN_APPROVAL_SECRET?: string;
   ORIGIN_SECRET?: string;
   ORIGIN_URL?: string;
+  INTENTS?: DurableObjectNamespace<IntentDurableObject>;
 };
+
+function cookieValue(request: Request, name: string): string | undefined {
+  return request.headers.get("cookie")?.split(";").map((part) => part.trim()).find((part) => part.startsWith(`${name}=`))?.slice(name.length + 1);
+}
+
+function intentStub(env: Env, id: string): DurableObjectStub<IntentDurableObject> | undefined {
+  if (!env.INTENTS) return undefined;
+  try { return env.INTENTS.get(env.INTENTS.idFromString(id)); }
+  catch { return undefined; }
+}
 
 class BootstrapInjector {
   constructor(private readonly source: string) {}
@@ -55,41 +67,55 @@ export default {
     if (url.pathname === "/experiments/drift") return new Response(driftExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
     if (url.pathname === "/experiments/drift/module.js") return new Response(driftExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/experiments/approval") {
-      approvalSession = crypto.randomUUID();
+      const approvalSession = crypto.randomUUID();
       return new Response(approvalExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_approval=${approvalSession}; HttpOnly; SameSite=Strict; Path=/` } });
     }
     if (url.pathname === "/experiments/approval/module.js") return new Response(approvalExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
-    if (url.pathname === "/__mulder/intents" && request.method === "GET") {
-      return Response.json({ intents: [...writeIntents].map(([digest, intent]) => ({ digest, state: intent.state })) });
+    if (url.pathname.startsWith("/__mulder/intents/") && request.method === "GET") {
+      const id = url.pathname.slice("/__mulder/intents/".length);
+      const stub = intentStub(env, id);
+      const session = cookieValue(request, "mulder_approval");
+      if (!stub || !session) return Response.json({ error: "intent_not_found" }, { status: 404 });
+      return stub.fetch("http://intent/status", { headers: { "x-browser-session-hash": await sha256(session) } });
     }
     if (url.pathname === "/__mulder/approve" && request.method === "POST") {
       if (!env.HUMAN_APPROVAL_SECRET || request.headers.get("x-human-approval") !== env.HUMAN_APPROVAL_SECRET) return Response.json({ error: "human_unauthorized" }, { status: 401 });
-      const body = await request.json() as { digest?: string };
-      const intent = body.digest ? writeIntents.get(body.digest) : undefined;
-      if (!intent || intent.state !== "pending") return Response.json({ error: "intent_not_pending" }, { status: 409 });
-      intent.state = "approved";
-      return Response.json({ digest: body.digest, state: intent.state });
+      const body = await request.json() as { intentId?: string; digest?: string; decisionId?: string };
+      const stub = body.intentId ? intentStub(env, body.intentId) : undefined;
+      if (!stub) return Response.json({ error: "intent_not_found" }, { status: 404 });
+      const approval = await stub.fetch("http://intent/approve", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ digest: body.digest, decisionId: body.decisionId, humanSubject: "local-human-fixture", authenticationMethod: "separate-shared-secret" }) });
+      const approvalBody = await approval.json() as Record<string, unknown>;
+      if (!approval.ok) return Response.json(approvalBody, { status: approval.status });
+      const execution = await stub.fetch("http://intent/execute", { method: "POST" });
+      const executionText = await execution.text();
+      let executionBody: unknown;
+      try { executionBody = JSON.parse(executionText); } catch { executionBody = executionText; }
+      return Response.json({ approval: approvalBody, execution: { status: execution.status, body: executionBody, replay: execution.headers.get("x-mulder-replay") } }, { status: execution.ok ? 200 : execution.status });
     }
     if (url.pathname === "/__mulder/write-call" && request.method === "POST") {
-      const browserVerified = request.headers.get("cookie")?.split(";").map((part) => part.trim()).includes(`mulder_approval=${approvalSession}`) === true;
-      if (!browserVerified) return Response.json({ error: "browser_unauthorized" }, { status: 401 });
-      if (!env.ORIGIN_SECRET || !env.ORIGIN_URL) return Response.json({ error: "origin_binding_missing" }, { status: 503 });
-      const input = await request.json() as Record<string, unknown>;
-      const bytes = new TextEncoder().encode(JSON.stringify(input));
-      const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((value) => value.toString(16).padStart(2, "0")).join("");
-      if (writeIntents.has(digest)) return Response.json({ error: "intent_replay", digest }, { status: 409 });
-      const intent: { state: "pending" | "approved" | "executing" | "consumed" | "expired"; input: Record<string, unknown> } = { state: "pending", input };
-      writeIntents.set(digest, intent);
-      const deadline = Date.now() + 15_000;
-      while (intent.state === "pending" && Date.now() < deadline) await new Promise((resolve) => setTimeout(resolve, 25));
-      if (intent.state !== "approved") {
-        writeIntents.set(digest, { ...intent, state: "expired" });
-        return Response.json({ error: "approval_timeout", digest }, { status: 408 });
-      }
-      writeIntents.set(digest, { ...intent, state: "executing" });
-      const response = await fetch(`${env.ORIGIN_URL}/write`, { method: "POST", headers: { authorization: `Bearer ${env.ORIGIN_SECRET}`, "content-type": "application/json" }, body: JSON.stringify(input) });
-      writeIntents.set(digest, { ...intent, state: "consumed" });
-      return new Response(response.body, { status: response.status, headers: { "content-type": "application/json", "x-mulder-intent": digest } });
+      const session = cookieValue(request, "mulder_approval");
+      if (!session) return Response.json({ error: "browser_unauthorized" }, { status: 401 });
+      if (!env.INTENTS || !env.ORIGIN_URL) return Response.json({ error: "intent_binding_missing" }, { status: 503 });
+      let input: Record<string, unknown>;
+      try { input = await request.json() as Record<string, unknown>; }
+      catch { return Response.json({ error: "bad_input" }, { status: 400 }); }
+      if (typeof input.title !== "string" || typeof input.classification !== "string" || Object.keys(input).some((name) => name !== "title" && name !== "classification")) return Response.json({ error: "bad_input" }, { status: 400 });
+      const id = env.INTENTS.newUniqueId();
+      const envelope: IntentEnvelope = {
+        version: 1,
+        tenant: "local-fixture",
+        operation: "create_case_file",
+        operationVersion: "1",
+        method: "POST",
+        targetPath: "/write",
+        contentType: "application/json",
+        bodyText: JSON.stringify(input),
+        policyVersion: "approval-v1",
+        credentialProfile: "protected-origin-v1",
+        browserSessionHash: await sha256(session),
+        expiresAt: Date.now() + 60_000,
+      };
+      return env.INTENTS.get(id).fetch("http://intent/create", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: id.toString(), envelope }) });
     }
     if (url.pathname === "/experiments/identity") {
       identitySession = crypto.randomUUID();
