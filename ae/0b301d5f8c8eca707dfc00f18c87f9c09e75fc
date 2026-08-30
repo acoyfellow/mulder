@@ -1,0 +1,27 @@
+experiments/10-edge-denial/README.md
+  s_0a87e8fcc24611::t_896bae55a1a5e6 1-38
+experiments/10-edge-denial/RESULT.json
+  s_0a87e8fcc24611::t_9e793b0bb92b58 1-52
+experiments/README.md
+  s_0a87e8fcc24611::t_8e009dcf8b2a87 14
+experiments/status.json
+  s_0a87e8fcc24611::t_ae44b0bfc516ee 11
+package.json
+  s_0a87e8fcc24611::t_9799bf69d42106 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ae0b301d5f8c8eca707dfc00f18c87f9c09e75fc",
+  "prompts": {},
+  "sessions": {
+    "s_0a87e8fcc24611": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a038fe-d370-7a9e-b05c-ce3bd6601a10",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
