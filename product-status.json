@@ -1,5 +1,5 @@
 {
-  "state": "release-candidate",
+  "state": "product-ready",
   "goal": "Release-ready secure WebMCP companion page for the documented read-only OpenAPI subset.",
   "completed": [
     "Committed a public-registry lockfile and proved an isolated frozen install.",
@@ -10,16 +10,14 @@
     "Bound approval digests to the complete immutable authority envelope.",
     "Proved concurrent approval yields one logical effect at an idempotent origin.",
     "Proved terminal replay survives a local Wrangler restart.",
+    "Prevented approved or uncertain intents from starting a late dispatch after expiry.",
     "Disabled the local approval fixture unless an explicit local-only variable is true.",
     "Replaced the constant CSP nonce with fresh per-response random nonces.",
     "Added live release-gate replays for CSP, credential custody, edge denial, native calls, and durable approval.",
-    "Closed all six findings from the final adversarial security review."
+    "Closed all six findings from the final adversarial security review.",
+    "Passed proof/product-ready.sh from a clean committed tree."
   ],
-  "remaining": [
-    "Commit the final security fixes.",
-    "Run proof/product-ready.sh from the final clean commit.",
-    "Pass the Terraloop gate."
-  ],
+  "remaining": [],
   "excluded": [
     "Public deployment",
     "Remote creation",
@@ -28,5 +26,6 @@
     "Crash-safe writes to origins without idempotency",
     "Production human identity integration",
     "Native WebMCP agent identity"
-  ]
+  ],
+  "proof": "bash proof/product-ready.sh"
 }
