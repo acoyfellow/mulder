@@ -20,7 +20,7 @@ const manifest = await fetch(`${base}/__mulder/manifest`).then((response) => res
 const ledger = await fetch(`${base}/ledger`).then((response) => response.json());
 if (JSON.stringify(manifest.tools.map((tool) => tool.name)) !== JSON.stringify(["get_weather"])) throw new Error("consumer manifest contains the wrong tools");
 const descriptor = receipt.tools[0];
-if (descriptor?.name !== "get_weather" || descriptor?.annotations?.readOnlyHint !== true || descriptor?.inputSchema?.additionalProperties !== false) throw new Error("native descriptor mismatch");
+if (descriptor?.name !== "get_weather" || descriptor?.annotations?.readOnly !== true || descriptor?.inputSchema?.additionalProperties !== false || !descriptor?.inputSchema?.required?.includes("city") || !descriptor?.inputSchema?.properties?.units?.enum?.includes("celsius")) throw new Error("native descriptor mismatch");
 const call = receipt.calls[0];
 if (call?.responded?.status !== "Completed" || call?.output?.body?.marker !== marker || call?.output?.body?.source !== "consumer-owned-unchanged-api") throw new Error("native consumer call failed");
 if (!String(receipt.inspected).includes(marker)) throw new Error("consumer page did not show native result");
