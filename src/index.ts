@@ -1,6 +1,7 @@
 import { approvalExperimentModule, approvalExperimentPage } from "./approval-experiment";
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
 import { custodyExperimentModule, custodyExperimentPage } from "./custody-experiment";
+import { driftExperimentModule, driftExperimentPage } from "./drift-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { identityExperimentModule, identityExperimentPage } from "./identity-experiment";
 import { buildRequest, generateTools } from "./openapi";
@@ -48,6 +49,8 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/drift") return new Response(driftExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
+    if (url.pathname === "/experiments/drift/module.js") return new Response(driftExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/experiments/approval") {
       approvalSession = crypto.randomUUID();
       return new Response(approvalExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "set-cookie": `mulder_approval=${approvalSession}; HttpOnly; SameSite=Strict; Path=/` } });

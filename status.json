@@ -1,6 +1,6 @@
 {
   "state": "experimenting",
-  "iteration": 10,
+  "iteration": 11,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
     "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
@@ -13,7 +13,8 @@
     "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent echo origin.",
     "The edge can verify a server-issued HttpOnly browser session independently of tool input.",
     "An edge policy denied a native call before any protected-origin request, while an allowed control incremented the independent origin counter exactly once.",
-    "A native write remained pending at zero origin calls, exact separate approval executed it once, and a replay returned 409 without another origin call."
+    "A native write remained pending at zero origin calls, exact separate approval executed it once, and a replay returned 409 without another origin call.",
+    "One live page added native version one and version two tools, retired version one, emitted native removal, and refused a later version one call."
   ],
   "falsified": [
     "Inline script injection works on a page with script-src self.",
@@ -24,9 +25,8 @@
   ],
   "notProven": [
     "CSP policies that require a nonce or hash and do not allow self",
-    "Specification drift",
     "Tool-count limits"
   ],
-  "currentExperiment": "08-specification-drift",
-  "nextAction": "Observe native tool addition, schema change behavior, and removal while one page remains open."
+  "currentExperiment": "09-tool-count-limits",
+  "nextAction": "Measure native discovery and invocation at increasing generated tool counts until a deterministic boundary or tested ceiling is reached."
 }

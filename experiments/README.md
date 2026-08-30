@@ -9,6 +9,6 @@
 | 05 | Request fidelity | partial | Path, scalar query, JSON, and errors match; arrays, headers, and multipart do not |
 | 06 | Approval for writes | proven locally | Native write waited at zero origin calls; exact approval executed once; replay returned 409 |
 | 07 | Principal identity | falsified for WebMCP alone | Browser session is verifiable; native calls carry no edge-verifiable agent principal |
-| 08 | Specification drift | unrun | Added, changed, and removed operations update native tools safely |
+| 08 | Specification drift | proven locally | Native v1 and v2 additions passed; v1 removal emitted and later call failed |
 | 09 | Tool-count limits | unrun | Measured discovery and call boundary with failure behavior |
 | 10 | Edge denial | proven locally | Native 403 left independent origin counters at zero; allowed control incremented once |

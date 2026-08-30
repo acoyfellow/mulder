@@ -1,0 +1,136 @@
+{
+  "schema": "webmcp-proof.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "url": "http://127.0.0.1:8891/experiments/drift",
+  "featureNames": [
+    "WebMCP",
+    "DevToolsWebMCPSupport"
+  ],
+  "tools": [
+    {
+      "name": "weather_contract_v1",
+      "description": "Weather contract version one",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "readOnly": true,
+        "untrustedContent": false
+      },
+      "frameId": "90161B92526D2337B11C445D2CC804F1",
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:8891/experiments/drift/module.js",
+            "lineNumber": 5,
+            "columnNumber": 14
+          }
+        ]
+      }
+    },
+    {
+      "name": "weather_contract_v2",
+      "description": "Weather contract version two",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "units": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "units"
+        ]
+      },
+      "annotations": {
+        "readOnly": true,
+        "untrustedContent": false
+      },
+      "frameId": "90161B92526D2337B11C445D2CC804F1",
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:8891/experiments/drift/module.js",
+            "lineNumber": 7,
+            "columnNumber": 14
+          }
+        ]
+      }
+    }
+  ],
+  "calls": [
+    {
+      "invocationId": "357587BEC223D3E14F515915CF7E5DAA",
+      "invoked": {
+        "toolName": "weather_contract_v1",
+        "frameId": "90161B92526D2337B11C445D2CC804F1",
+        "invocationId": "357587BEC223D3E14F515915CF7E5DAA",
+        "input": "{\"city\":\"Oslo\"}"
+      },
+      "responded": {
+        "invocationId": "357587BEC223D3E14F515915CF7E5DAA",
+        "status": "Completed",
+        "output": {
+          "version": 1,
+          "city": "Oslo"
+        }
+      },
+      "output": {
+        "version": 1,
+        "city": "Oslo"
+      }
+    },
+    {
+      "invocationId": "5D2D88B880736E4568A7855EA2773E44",
+      "invoked": {
+        "toolName": "weather_contract_v2",
+        "frameId": "90161B92526D2337B11C445D2CC804F1",
+        "invocationId": "5D2D88B880736E4568A7855EA2773E44",
+        "input": "{\"city\":\"Oslo\",\"units\":\"celsius\"}"
+      },
+      "responded": {
+        "invocationId": "5D2D88B880736E4568A7855EA2773E44",
+        "status": "Completed",
+        "output": {
+          "version": 2,
+          "city": "Oslo",
+          "units": "celsius"
+        }
+      },
+      "output": {
+        "version": 2,
+        "city": "Oslo",
+        "units": "celsius"
+      }
+    }
+  ],
+  "inspected": "{\"version\":2,\"city\":\"Oslo\",\"units\":\"celsius\"}",
+  "after": {
+    "removed": [
+      "weather_contract_v1"
+    ],
+    "denied": true,
+    "error": "Error: WebMCP.invokeTool: {\"code\":-32602,\"message\":\"Tool not found\"}"
+  },
+  "screenshot": {
+    "path": "experiments/08-specification-drift/native.png",
+    "sha256": "9857c74c2beb407a2ddcc4efcd0fdc9f443429142cb2092393aeb0c89c121f9a"
+  },
+  "verdict": "pass"
+}
