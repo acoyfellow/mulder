@@ -2,7 +2,7 @@
 
 > The API is out there.
 
-Mulder gives an OpenAPI API a same-origin native WebMCP companion page at Cloudflare's edge. Explicitly enabled operations become tools. The API implementation does not change.
+Mulder gives a supported OpenAPI 3.1 API a same-origin native WebMCP companion page at Cloudflare's edge. Explicitly enabled operations become tools. The API implementation does not change. Unsupported semantics fail compilation instead of becoming weaker tools.
 
 This is a local, private spike. It is not a product yet.
 
@@ -47,7 +47,7 @@ curl -X POST http://127.0.0.1:8891/__mulder/call/get_weather \
   -d '{"city":"Lisbon","units":"celsius"}'
 ```
 
-The experiment findings are in `findings.md`. The terminal check is:
+The exact supported subset is in `SUPPORT.md`. The experiment findings are in `findings.md`. The terminal check is:
 
 ```bash
 bun run check

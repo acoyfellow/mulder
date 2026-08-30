@@ -5,7 +5,7 @@ import { custodyExperimentModule, custodyExperimentPage } from "./custody-experi
 import { driftExperimentModule, driftExperimentPage } from "./drift-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
 import { identityExperimentModule, identityExperimentPage } from "./identity-experiment";
-import { buildRequest, generateTools } from "./openapi";
+import { executeTool, generateTools } from "./openapi";
 import { schemaExperimentModule, schemaExperimentPage } from "./schema-experiment";
 
 const tools = generateTools(fixtureDocument);
@@ -40,7 +40,7 @@ async function callGeneratedTool(request: Request, name: string): Promise<Respon
   try { input = JSON.parse(text) as Record<string, unknown>; }
   catch { return Response.json({ error: "bad_input" }, { status: 400 }); }
   try {
-    return fixtureApi(buildRequest(tool, input, new URL(request.url).origin));
+    return executeTool(tool, input, new URL(request.url).origin, fixtureApi);
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "bad_input" }, { status: 400 });
   }
