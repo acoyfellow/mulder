@@ -1,0 +1,31 @@
+experiments/04-credential-custody/origin.mjs
+  s_0a87e8fcc24611::t_ea366aa9f2df64 12,21-22,28
+experiments/06-write-approval/RESULT.json
+  s_5fe3591d60297c::t_c5a243049aee8b 1-67
+package.json
+  s_0a87e8fcc24611::t_02c8aa09925f70 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "430a480d9c8edf3d731c50d6c1d7d6e97fc9f12a",
+  "prompts": {},
+  "sessions": {
+    "s_0a87e8fcc24611": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a038fe-d370-7a9e-b05c-ce3bd6601a10",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    },
+    "s_5fe3591d60297c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019fd866-e69a-76ed-8232-4f273583c9fe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
