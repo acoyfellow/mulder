@@ -47,13 +47,23 @@ curl -X POST http://127.0.0.1:8891/__mulder/call/get_weather \
   -d '{"city":"Lisbon","units":"celsius"}'
 ```
 
-The exact supported subset is in `SUPPORT.md`. The experiment findings are in `findings.md`. The terminal check is:
+The exact supported subset is in `SUPPORT.md`. The experiment findings are in `findings.md`.
+
+The fast check is:
 
 ```bash
 bun run check
 ```
 
-That check verifies the compiler tests and the checked native Chrome receipt. The receipt contains discovery, invocation, response, visible state, and a screenshot hash. It also proves that `erase_weather` remained absent.
+The release-readiness gate creates a fresh archived checkout, installs only from the public registry, replays native Chrome behavior, and replays durable approval across a Worker restart:
+
+```bash
+bash proof/product-ready.sh
+```
+
+The checks prove native discovery, invocation, response, visible state, credential custody, input denial before origin dispatch, durable approval, idempotent logical execution, and screenshot integrity. They also prove that `erase_weather` remains absent.
+
+`proof/native-harness.mjs` vendors the MIT-licensed `webmcp-proof` 0.0.1 harness from <https://github.com/acoyfellow/webmcp-proof>. Keeping the harness in this repository removes a sibling-repository dependency from the release gate.
 
 ## Shape
 
