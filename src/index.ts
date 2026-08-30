@@ -1,5 +1,6 @@
 import { approvalExperimentModule, approvalExperimentPage } from "./approval-experiment";
 import { webMcpBootstrap, webMcpBootstrapModule } from "./bootstrap";
+import { countExperimentModule, countExperimentPage } from "./count-experiment";
 import { custodyExperimentModule, custodyExperimentPage } from "./custody-experiment";
 import { driftExperimentModule, driftExperimentPage } from "./drift-experiment";
 import { fixtureApi, fixtureDocument, fixturePage } from "./fixture";
@@ -49,6 +50,8 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/openapi.json") return Response.json(fixtureDocument);
+    if (url.pathname === "/experiments/count") return new Response(countExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
+    if (url.pathname === "/experiments/count/module.js") return new Response(countExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/experiments/drift") return new Response(driftExperimentPage(), { headers: { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy } });
     if (url.pathname === "/experiments/drift/module.js") return new Response(driftExperimentModule(), { headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" } });
     if (url.pathname === "/experiments/approval") {
@@ -139,12 +142,20 @@ export default {
     }
     if (url.pathname.startsWith("/api/")) return fixtureApi(request);
     if (url.pathname === "/origin") return new Response(fixturePage(), { headers: { "content-type": "text/html; charset=utf-8" } });
-    if (url.pathname === "/experiments/csp/inline" || url.pathname === "/experiments/csp/external") {
-      const headers = { "content-type": "text/html; charset=utf-8", "content-security-policy": selfScriptPolicy, "cache-control": "no-store" };
+    if (url.pathname.startsWith("/experiments/csp/")) {
+      const variant = url.pathname.slice("/experiments/csp/".length);
+      const policy = variant === "nonce"
+        ? "default-src 'none'; script-src 'nonce-mulder-fixture'; connect-src 'self'; style-src 'unsafe-inline'"
+        : variant === "hash"
+          ? "default-src 'none'; script-src 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='; connect-src 'self'; style-src 'unsafe-inline'"
+          : selfScriptPolicy;
+      const headers = { "content-type": "text/html; charset=utf-8", "content-security-policy": policy, "cache-control": "no-store" };
       const origin = new Response(fixturePage(), { headers });
-      const injection = url.pathname.endsWith("/external")
-        ? '<script type="module" src="/__mulder/bootstrap.js"></script>'
-        : webMcpBootstrap(tools);
+      const injection = variant === "inline"
+        ? webMcpBootstrap(tools)
+        : variant === "nonce"
+          ? '<script type="module" nonce="mulder-fixture" src="/__mulder/bootstrap.js"></script>'
+          : '<script type="module" src="/__mulder/bootstrap.js"></script>';
       return new HTMLRewriter().on("body", new BootstrapInjector(injection)).transform(origin);
     }
     if (url.pathname === "/") {

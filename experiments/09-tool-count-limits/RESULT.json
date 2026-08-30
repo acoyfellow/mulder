@@ -1,0 +1,94 @@
+{
+  "schema": "mulder.tool-count.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "runs": [
+    {
+      "count": 10,
+      "passed": true,
+      "discovered": 10,
+      "first": {
+        "index": 0,
+        "value": 1
+      },
+      "last": {
+        "index": 9,
+        "value": 2
+      },
+      "elapsedMs": 2029,
+      "screenshot": null
+    },
+    {
+      "count": 100,
+      "passed": true,
+      "discovered": 100,
+      "first": {
+        "index": 0,
+        "value": 1
+      },
+      "last": {
+        "index": 99,
+        "value": 2
+      },
+      "elapsedMs": 1711,
+      "screenshot": null
+    },
+    {
+      "count": 500,
+      "passed": true,
+      "discovered": 500,
+      "first": {
+        "index": 0,
+        "value": 1
+      },
+      "last": {
+        "index": 499,
+        "value": 2
+      },
+      "elapsedMs": 1790,
+      "screenshot": null
+    },
+    {
+      "count": 1000,
+      "passed": true,
+      "discovered": 1000,
+      "first": {
+        "index": 0,
+        "value": 1
+      },
+      "last": {
+        "index": 999,
+        "value": 2
+      },
+      "elapsedMs": 10547,
+      "screenshot": {
+        "path": "experiments/09-tool-count-limits/native.png",
+        "sha256": "818deff2c215f6fdcb8bb93e3df91c4bd744d652a2eaf98fcc2798477373e01b"
+      }
+    },
+    {
+      "count": 2000,
+      "passed": true,
+      "discovered": 2000,
+      "first": {
+        "index": 0,
+        "value": 1
+      },
+      "last": {
+        "index": 1999,
+        "value": 2
+      },
+      "elapsedMs": 11131,
+      "screenshot": {
+        "path": "experiments/09-tool-count-limits/native.png",
+        "sha256": "ecbbd38de29238980acaab16f9e65864b621952a2f216dadb100011cf2835a6f"
+      }
+    }
+  ],
+  "largestTestedPass": 2000,
+  "firstFailure": null,
+  "verdict": "tested-ceiling-passed",
+  "screenshot": {
+    "path": "experiments/09-tool-count-limits/native.png",
+    "sha256": "ecbbd38de29238980acaab16f9e65864b621952a2f216dadb100011cf2835a6f"
+  }
+}

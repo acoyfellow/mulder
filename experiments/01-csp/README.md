@@ -1,6 +1,6 @@
 # Experiment 01: Content Security Policy
 
-Status: passed for `script-src 'self'`
+Status: same-origin and nonce passed; hash-only blocked
 
 ## Question
 
@@ -36,6 +36,10 @@ Screenshot: `external.png`
 
 Verifier: `node experiments/01-csp/verify.mjs`
 
+A nonce-only policy without `self` also passed without policy rewriting. Mulder copied the response's nonce onto the external bootstrap tag. Chrome discovered and invoked `get_weather`.
+
+A hash-only policy without `self` blocked the external bootstrap. Chrome emitted no tool discovery event. Mulder cannot add code under a hash-only policy unless the origin already includes Mulder's exact script hash or Cloudflare rewrites the policy.
+
 ## Boundary
 
-A stricter policy such as `script-src 'nonce-…'` without `self` is a separate result. This experiment tests a common same-origin script policy first.
+Rewriting a customer's hash-only policy would change its security contract. This result treats that path as blocked rather than silently weakening CSP.

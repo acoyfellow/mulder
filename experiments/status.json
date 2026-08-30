@@ -1,5 +1,5 @@
 [
-  {"id":"01-csp","state":"proven","receipt":"experiments/01-csp/RESULT.json","verifier":"experiments/01-csp/verify.mjs"},
+  {"id":"01-csp","state":"partial","receipt":"experiments/01-csp/RESULT.json","verifier":"experiments/01-csp/verify.mjs"},
   {"id":"02-api-without-document","state":"partial","receipt":"experiments/02-api-without-document/RESULT.json","verifier":"experiments/02-api-without-document/verify.mjs"},
   {"id":"03-schema-compatibility","state":"proven","receipt":"experiments/03-schema-compatibility/RESULT.json","verifier":"experiments/03-schema-compatibility/verify.mjs"},
   {"id":"04-credential-custody","state":"proven","receipt":"experiments/04-credential-custody/RESULT.json","verifier":"experiments/04-credential-custody/verify.mjs"},
@@ -7,6 +7,6 @@
   {"id":"06-write-approval","state":"proven","receipt":"experiments/06-write-approval/RESULT.json","verifier":"experiments/06-write-approval/verify.mjs"},
   {"id":"07-principal-identity","state":"falsified","receipt":"experiments/07-principal-identity/RESULT.json","verifier":"experiments/07-principal-identity/verify.mjs"},
   {"id":"08-specification-drift","state":"proven","receipt":"experiments/08-specification-drift/RESULT.json","verifier":"experiments/08-specification-drift/verify.mjs"},
-  {"id":"09-tool-count-limits","state":"unrun"},
+  {"id":"09-tool-count-limits","state":"proven","receipt":"experiments/09-tool-count-limits/RESULT.json","verifier":"experiments/09-tool-count-limits/verify.mjs"},
   {"id":"10-edge-denial","state":"proven","receipt":"experiments/10-edge-denial/RESULT.json","verifier":"experiments/10-edge-denial/verify.mjs"}
 ]

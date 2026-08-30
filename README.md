@@ -2,7 +2,7 @@
 
 > The API is out there.
 
-Mulder turns explicitly enabled OpenAPI operations into native WebMCP tools at Cloudflare's edge. The API implementation does not change.
+Mulder gives an OpenAPI API a same-origin native WebMCP companion page at Cloudflare's edge. Explicitly enabled operations become tools. The API implementation does not change.
 
 This is a local, private spike. It is not a product yet.
 
@@ -47,7 +47,7 @@ curl -X POST http://127.0.0.1:8891/__mulder/call/get_weather \
   -d '{"city":"Lisbon","units":"celsius"}'
 ```
 
-The terminal check is:
+The experiment findings are in `findings.md`. The terminal check is:
 
 ```bash
 bun run check

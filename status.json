@@ -1,32 +1,32 @@
 {
-  "state": "experimenting",
-  "iteration": 11,
+  "state": "exhausted",
+  "iteration": 12,
   "northStar": "Determine whether Cloudflare can turn an existing OpenAPI API into a safe native WebMCP interface without changing the API implementation.",
   "proven": [
-    "One explicitly enabled OpenAPI GET operation became a native read-only WebMCP tool in Chrome 151.",
-    "The native call reached the unchanged fixture API and changed visible page state.",
-    "An operation without x-webmcp-enabled true was absent from native discovery and the generated call route.",
-    "An external same-origin bootstrap preserves script-src self and passes native discovery and invocation.",
-    "Cloudflare can generate a same-origin companion document for a JSON-only API, and that document can publish and call native tools.",
-    "Ten tested OpenAPI-style schema shapes registered, were natively discovered, and completed native invocations in Chrome 151.",
-    "A native call reached a separately protected unchanged origin while the random origin credential remained only in the edge binding and protected subrequest.",
-    "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent echo origin.",
-    "The edge can verify a server-issued HttpOnly browser session independently of tool input.",
-    "An edge policy denied a native call before any protected-origin request, while an allowed control incremented the independent origin counter exactly once.",
-    "A native write remained pending at zero origin calls, exact separate approval executed it once, and a replay returned 409 without another origin call.",
-    "One live page added native version one and version two tools, retired version one, emitted native removal, and refused a later version one call."
+    "Explicitly enabled OpenAPI operations can become native WebMCP tools in Chrome 151 and reach an unchanged API.",
+    "A same-origin external bootstrap works under script-src self, and a nonce-bearing external bootstrap works under a nonce-only policy without rewriting CSP.",
+    "Cloudflare can generate a same-origin companion document for a JSON-only API.",
+    "Ten tested OpenAPI-style schema shapes registered, were natively discovered, and completed native invocations.",
+    "An edge-held origin credential can remain absent from the page, tool input, native events, manifest, and receipt while a protected origin call succeeds.",
+    "Path encoding, scalar query parameters, JSON bodies, and HTTP error status matched an independent origin.",
+    "An edge policy can deny a native call before an independent protected origin sees a request.",
+    "A native write can wait for separate exact-intent approval, execute once, and reject replay before another origin call.",
+    "A live page can add a replacement native tool, retire the old tool, emit removal, and make the old descriptor unusable.",
+    "Chrome 151 discovered exact generated tool sets through 2000 tools and completed first and final calls."
   ],
   "falsified": [
-    "Inline script injection works on a page with script-src self.",
+    "Inline injection works under script-src self.",
+    "Hash-only CSP permits Mulder injection without an origin-provided hash or policy rewrite.",
     "A JSON API document can itself publish native WebMCP tools.",
     "Chrome registration means Chrome enforces JSON Schema constraints before tool execution.",
-    "The current compiler has general OpenAPI request fidelity: array query, header, and multipart cases failed or were unsupported.",
+    "The current compiler has general OpenAPI request fidelity.",
     "Native WebMCP supplies an edge-verifiable agent principal distinct from the browser session."
   ],
-  "notProven": [
-    "CSP policies that require a nonce or hash and do not allow self",
-    "Tool-count limits"
+  "partial": [
+    "Request fidelity passes for path, scalar query, JSON, and HTTP errors but fails or is unsupported for array query, headers, and multipart.",
+    "Credential custody, edge denial, and write approval are local proofs rather than deployed production proofs.",
+    "The tool-count experiment found no failure through 2000 and therefore records a tested ceiling, not an absolute browser maximum."
   ],
-  "currentExperiment": "09-tool-count-limits",
-  "nextAction": "Measure native discovery and invocation at increasing generated tool counts until a deterministic boundary or tested ceiling is reached."
+  "notProven": [],
+  "nextPhase": "Choose a product claim from the evidence. Do not claim that an API itself becomes WebMCP, that Chrome validates inputs, that every CSP works, or that native WebMCP identifies the calling agent."
 }
