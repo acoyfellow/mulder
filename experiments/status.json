@@ -8,5 +8,5 @@
   {"id":"07-principal-identity","state":"falsified","receipt":"experiments/07-principal-identity/RESULT.json","verifier":"experiments/07-principal-identity/verify.mjs"},
   {"id":"08-specification-drift","state":"unrun"},
   {"id":"09-tool-count-limits","state":"unrun"},
-  {"id":"10-edge-denial","state":"unrun"}
+  {"id":"10-edge-denial","state":"proven","receipt":"experiments/10-edge-denial/RESULT.json","verifier":"experiments/10-edge-denial/verify.mjs"}
 ]

@@ -1,0 +1,52 @@
+{
+  "schema": "mulder.edge-denial.v0",
+  "browser": "Chrome/151.0.7922.34",
+  "directAdapter": {
+    "status": 401,
+    "originLedger": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "09c6855ced379d6b0aa70ad6566efbc071ccee97d8eada8bc58cada9b7ae8b12"
+    }
+  },
+  "denied": {
+    "invocationId": "DD085E1321078985BDE1A921DF4C4960",
+    "status": "Completed",
+    "output": {
+      "status": 403,
+      "body": {
+        "error": "policy_denied",
+        "rule": "deny-forbidden-city",
+        "subrequestCreated": false
+      }
+    },
+    "originLedger": {
+      "authorizedCount": 0,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "09c6855ced379d6b0aa70ad6566efbc071ccee97d8eada8bc58cada9b7ae8b12"
+    },
+    "screenshot": {
+      "path": "experiments/10-edge-denial/denied.png",
+      "sha256": "cb95eb22bfa502790a2108a487d8a10cfe45236f0d4b7225541014b521b185aa"
+    }
+  },
+  "allowed": {
+    "invocationId": "305CB0D9EE3855ADCC947AB37DB79A60",
+    "status": "Completed",
+    "output": {
+      "status": 200,
+      "body": {
+        "city": "Paris",
+        "temperature": 23,
+        "source": "protected-unchanged-origin",
+        "requestNumber": 1
+      }
+    },
+    "originLedger": {
+      "authorizedCount": 1,
+      "unauthorizedCount": 0,
+      "credentialFingerprint": "09c6855ced379d6b0aa70ad6566efbc071ccee97d8eada8bc58cada9b7ae8b12"
+    }
+  },
+  "verdict": "pass"
+}

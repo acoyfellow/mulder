@@ -11,4 +11,4 @@
 | 07 | Principal identity | falsified for WebMCP alone | Browser session is verifiable; native calls carry no edge-verifiable agent principal |
 | 08 | Specification drift | unrun | Added, changed, and removed operations update native tools safely |
 | 09 | Tool-count limits | unrun | Measured discovery and call boundary with failure behavior |
-| 10 | Edge denial | unrun | Denied generated call never reaches the unchanged API |
+| 10 | Edge denial | proven locally | Native 403 left independent origin counters at zero; allowed control incremented once |

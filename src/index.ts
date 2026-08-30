@@ -76,6 +76,7 @@ export default {
       try { input = await request.json() as { city?: string }; }
       catch { return Response.json({ error: "bad_input" }, { status: 400 }); }
       if (!input.city || input.city.length > 100) return Response.json({ error: "city_required" }, { status: 400 });
+      if (input.city === "Forbidden") return Response.json({ error: "policy_denied", rule: "deny-forbidden-city", subrequestCreated: false }, { status: 403 });
       const response = await fetch(`${env.ORIGIN_URL}/weather/${encodeURIComponent(input.city)}`, { headers: { authorization: `Bearer ${env.ORIGIN_SECRET}` } });
       return new Response(response.body, { status: response.status, headers: { "content-type": "application/json" } });
     }
