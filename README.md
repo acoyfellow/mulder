@@ -84,7 +84,7 @@ The release-readiness gate creates a fresh archived checkout, installs only from
 bash proof/product-ready.sh
 ```
 
-The independent-consumer gate packs the artifact, deletes its build checkout, installs it outside this repository, denies producer-source reads, runs a consumer-owned API, invokes it through native Chrome WebMCP, and inspects a Wrangler dry-run bundle:
+The independent-consumer gate packs the artifact, deletes its build checkout, installs it outside this repository, denies producer-source reads, runs a consumer-owned API, invokes it through native Chrome WebMCP, and inspects a Wrangler dry-run bundle. It then plants an artifact-only `shadow_write` tool and proves that exact native discovery rejects the changed artifact:
 
 ```bash
 bash proof/consumer-release.sh

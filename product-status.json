@@ -15,6 +15,8 @@
     "Proved the installed package has zero production dependency vulnerabilities.",
     "Denied producer-source reads for the consumer runtime and passed the negative control.",
     "Proved a real Chrome native WebMCP call reached exactly one consumer-owned unchanged API route.",
+    "Collected the complete native discovery set after quiescence and required exactly get_weather.",
+    "Planted shadow_write only in the packed artifact and proved the clean-consumer gate rejects it.",
     "Proved the consumer API source remained byte-for-byte unchanged.",
     "Passed consumer TypeScript compilation and Wrangler deploy dry-run bundle inspection."
   ],
