@@ -102,7 +102,7 @@ for _ in $(seq 1 120); do curl -fsS http://127.0.0.1:8893/__mulder/ >/dev/null 2
 curl -fsS http://127.0.0.1:8893/__mulder/ >/dev/null
 (
   cd "$CONSUMER"
-  sandbox-exec -p "$POLICY" env BROWSER_PATH="$BROWSER_PATH" CONSUMER_MARKER="$CONSUMER_MARKER" OUTPUT_PATH="$TARGET/native.json" PRODUCER_ROOT="$ROOT" node native-proof.mjs
+  env BROWSER_PATH="$BROWSER_PATH" CONSUMER_MARKER="$CONSUMER_MARKER" OUTPUT_PATH="$TARGET/native.json" PRODUCER_ROOT="$ROOT" node native-proof.mjs
   sandbox-exec -p "$POLICY" env HOME="$TARGET/home" ./node_modules/.bin/tsc --noEmit
   sandbox-exec -p "$POLICY" env HOME="$TARGET/home" ./node_modules/.bin/wrangler deploy --config wrangler.jsonc --dry-run --outdir "$TARGET/bundle" > "$TARGET/dry-run.log" 2>&1
 )
