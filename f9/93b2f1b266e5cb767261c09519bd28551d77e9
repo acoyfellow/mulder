@@ -1,0 +1,47 @@
+.gitignore
+  s_0a87e8fcc24611::t_0ed9bf8c9d2b3b 5,8
+README.md
+  s_0a87e8fcc24611::t_a055cb6e93af3b 9-24
+proof/native-harness.mjs
+  s_0a87e8fcc24611::t_24534b39944410 166-173
+proof/verify-site-browser.mjs
+  s_0a87e8fcc24611::t_47fa1895c866db 1-31
+proof/verify-site-examples.mjs
+  s_0a87e8fcc24611::t_53096f66353d59 1-27
+proof/verify-site-starter-native.mjs
+  s_0a87e8fcc24611::t_d93abd05413431 1-25
+proof/verify-site.mjs
+  s_0a87e8fcc24611::t_2b3b1657e22032 1-52
+site/build.mjs
+  s_0a87e8fcc24611::t_89df1da0f3ab51 1-146
+site/build.sh
+  s_5fe3591d60297c::t_91f0d3d1508c39 1-11
+site/starter/wrangler.jsonc
+  s_0a87e8fcc24611::t_6b8bb7d793fddd 1-7
+site/wrangler.jsonc
+  s_0a87e8fcc24611::t_408effb50c5bf5 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f993b2f1b266e5cb767261c09519bd28551d77e9",
+  "prompts": {},
+  "sessions": {
+    "s_0a87e8fcc24611": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a038fe-d370-7a9e-b05c-ce3bd6601a10",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    },
+    "s_5fe3591d60297c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019fd866-e69a-76ed-8232-4f273583c9fe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
