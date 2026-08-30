@@ -54,14 +54,14 @@ HUMAN_APPROVAL_SECRET=$(openssl rand -hex 32)
 printf 'ORIGIN_URL=http://127.0.0.1:8892\nORIGIN_SECRET=%s\nHUMAN_APPROVAL_SECRET=%s\n' "$ORIGIN_SECRET" "$HUMAN_APPROVAL_SECRET" > "$VARS_FILE"
 (
   cd "$CHECKOUT"
-  ORIGIN_SECRET="$ORIGIN_SECRET" ORIGIN_PORT=8892 bun experiments/04-credential-custody/origin.mjs
+  exec env ORIGIN_SECRET="$ORIGIN_SECRET" ORIGIN_PORT=8892 bun experiments/04-credential-custody/origin.mjs
 ) >"$ORIGIN_LOG" 2>&1 &
 ORIGIN_PID=$!
 
 start_worker() {
   (
     cd "$CHECKOUT"
-    HOME="$HOME_DIR" BUN_INSTALL_CACHE_DIR="$CACHE_DIR" bunx wrangler dev --env-file "$VARS_FILE" --port 8891 --inspector-port 0
+    exec env HOME="$HOME_DIR" BUN_INSTALL_CACHE_DIR="$CACHE_DIR" bunx wrangler dev --env-file "$VARS_FILE" --port 8891 --inspector-port 0
   ) >"$WORKER_LOG" 2>&1 &
   WORKER_PID=$!
 }
