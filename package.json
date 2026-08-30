@@ -1,9 +1,21 @@
 {
   "name": "mulder",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/public.d.ts",
+      "import": "./dist/public.js",
+      "default": "./dist/public.js"
+    }
+  },
+  "types": "./dist/public.d.ts",
+  "files": ["dist", "README.md", "SUPPORT.md", "LICENSE"],
   "scripts": {
+    "build": "rm -rf dist && esbuild src/public.ts --bundle --format=esm --platform=browser --outfile=dist/public.js && tsc -p tsconfig.build.json",
+    "prepack": "bun run build",
     "dev": "wrangler dev --port 8891 --inspector-port 0",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
@@ -13,6 +25,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260527.1",
     "bun-types": "1.3.14",
+    "esbuild": "0.27.3",
     "typescript": "6.0.3",
     "wrangler": "4.95.0"
   }
