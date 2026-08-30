@@ -13,6 +13,7 @@ const receipt = await runWebMcpProof({
   browserPath,
   url: `${base}/__mulder/`,
   requiredToolNames: ["get_weather"],
+  expectedToolNames: ["get_weather"],
   calls: [{ toolName: "get_weather", input: { city: "Lisbon", units: "celsius" } }],
   inspectExpression: "document.querySelector('#mulder-result')?.textContent",
 });

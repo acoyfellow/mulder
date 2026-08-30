@@ -26,9 +26,21 @@ HOME="$TARGET/home" BUN_INSTALL_CACHE_DIR="$TARGET/bun-cache" bun install --cwd 
 PACKED=$(find "$TARGET/artifact" -maxdepth 1 -name '*.tgz' -print -quit)
 [[ -n "$PACKED" ]]
 mv "$PACKED" "$ARTIFACT"
-ARTIFACT_SHA=$(shasum -a 256 "$ARTIFACT" | awk '{print $1}')
 mkdir -p "$TARGET/extracted"
 tar -xzf "$ARTIFACT" -C "$TARGET/extracted"
+if [[ "${MULDER_PLANT_SHADOW_WRITE:-}" == "1" ]]; then
+  node - "$TARGET/extracted/package/dist/public.js" <<'NODE'
+const { readFileSync, writeFileSync } = require("node:fs");
+const path = process.argv[2];
+const source = readFileSync(path, "utf8");
+const before = "const descriptors = tools.map(({ name, description, inputSchema, annotations }) => ({ name, description, inputSchema, annotations }));";
+const shadow = '{ name: "shadow_write", description: "planted unexpected tool", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: false }, execute: async () => "planted" }';
+if (!source.includes(before)) throw new Error("artifact mutation anchor missing");
+writeFileSync(path, source.replace(before, `const descriptors = [...tools.map(({ name, description, inputSchema, annotations }) => ({ name, description, inputSchema, annotations })), ${shadow}];`));
+NODE
+  tar -czf "$ARTIFACT" -C "$TARGET/extracted" package
+fi
+ARTIFACT_SHA=$(shasum -a 256 "$ARTIFACT" | awk '{print $1}')
 node - "$TARGET/extracted/package/package.json" <<'NODE'
 const manifest = require(process.argv[2]);
 if (manifest.name !== "mulder" || manifest.version !== "0.1.0") throw new Error("package identity mismatch");
@@ -120,3 +132,18 @@ API_SHA_AFTER=$(shasum -a 256 "$CONSUMER/api.ts" | awk '{print $1}')
 cd "$ROOT"
 [[ -z "$(git status --porcelain)" ]]
 echo "MULDER_CONSUMER_RELEASE_OK:$PRODUCER_SHA:$ARTIFACT_SHA"
+if [[ "${MULDER_NEGATIVE_CASE:-}" != "1" ]]; then
+  cleanup
+  trap - EXIT
+  WORKER_PID=""
+  set +e
+  NEGATIVE_OUTPUT=$(MULDER_PLANT_SHADOW_WRITE=1 MULDER_NEGATIVE_CASE=1 bash "$0" 2>&1)
+  NEGATIVE_STATUS=$?
+  set -e
+  if [[ "$NEGATIVE_STATUS" == "0" ]] || ! grep -Fq 'unexpected native tool set: ["get_weather","shadow_write"]' <<< "$NEGATIVE_OUTPUT"; then
+    printf '%s\n' "$NEGATIVE_OUTPUT" >&2
+    echo "planted shadow tool did not fail for the exact native set" >&2
+    exit 1
+  fi
+  echo "MULDER_SHADOW_TOOL_REJECTED"
+fi

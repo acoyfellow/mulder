@@ -167,13 +167,20 @@ async function runWebMcpProof(options) {
     await waitEvent("Page.loadEventFired");
     const required = new Set(options.requiredToolNames ?? options.calls.map(({ toolName }) => toolName));
     const tools = new Map;
-    while ([...required].some((name) => !tools.has(name))) {
-      const added = await waitEvent("WebMCP.toolsAdded");
-      for (const tool of added.tools ?? []) {
-        const name = String(tool.name);
-        if (required.has(name))
-          tools.set(name, tool);
-      }
+    const addTools = (added) => {
+      for (const tool of added.tools ?? []) tools.set(String(tool.name), tool);
+    };
+    while ([...required].some((name) => !tools.has(name))) addTools(await waitEvent("WebMCP.toolsAdded"));
+    await delay(options.discoveryQuiescenceMs ?? 500);
+    for (let index = events.length - 1; index >= 0; index -= 1) {
+      if (events[index].method !== "WebMCP.toolsAdded") continue;
+      addTools(events[index].params ?? {});
+      events.splice(index, 1);
+    }
+    if (options.expectedToolNames) {
+      const actual = [...tools.keys()].sort();
+      const expected = [...options.expectedToolNames].sort();
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new Error(`unexpected native tool set: ${JSON.stringify(actual)}`);
     }
     const calls = [];
     for (const call of options.calls) {

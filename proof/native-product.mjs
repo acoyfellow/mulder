@@ -11,6 +11,7 @@ try {
     browserPath,
     url: "http://127.0.0.1:8891/__mulder/",
     requiredToolNames: ["get_weather"],
+    expectedToolNames: ["get_weather"],
     calls: [{ toolName: "get_weather", input: { city: "Lisbon", units: "celsius" } }],
     screenshotPath: join(directory, "native.png"),
   });
