@@ -1,0 +1,21 @@
+proof/polished-demo.sh
+  s_0a87e8fcc24611::t_783ffea06a067b 70,73,82
+proof/record-polished-demo.mjs
+  s_0a87e8fcc24611::t_a93cd430a74b6e 1,7-8,19-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "89688f6e47b0ad8db51f611cedb4da52be2636b2",
+  "prompts": {},
+  "sessions": {
+    "s_0a87e8fcc24611": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a038fe-d370-7a9e-b05c-ce3bd6601a10",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
