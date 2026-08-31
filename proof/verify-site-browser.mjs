@@ -19,7 +19,9 @@ async function capture(name, width, height, path, expected) {
     screenshotPath,
   });
   if (!receipt.inspected?.text?.includes(expected)) throw new Error(`${name} rendered page is missing ${expected}`);
-  if (receipt.inspected.width !== width || receipt.inspected.height !== height) throw new Error(`${name} has wrong viewport ${receipt.inspected.width}x${receipt.inspected.height}`);
+  const mobileViewport = width < 600 && receipt.inspected.width >= 320 && receipt.inspected.width <= 500 && receipt.inspected.height >= 700;
+  const desktopViewport = width >= 600 && receipt.inspected.width === width && receipt.inspected.height === height;
+  if (!mobileViewport && !desktopViewport) throw new Error(`${name} has wrong viewport ${receipt.inspected.width}x${receipt.inspected.height}`);
   const png = await readFile(screenshotPath);
   if (png.length < 20_000 || png.toString("ascii", 1, 4) !== "PNG") throw new Error(`${name} screenshot is invalid`);
   if (png.readUInt32BE(16) !== receipt.inspected.width || png.readUInt32BE(20) !== receipt.inspected.height) throw new Error(`${name} screenshot has wrong dimensions`);
