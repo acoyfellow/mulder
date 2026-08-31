@@ -29,6 +29,7 @@ HOME="$TARGET/home" BUN_INSTALL_CACHE_DIR="$TARGET/cache" bun install --cwd "$TA
   bun run site:build
   node proof/verify-site.mjs site/dist
   node proof/verify-kumo.mjs site/dist
+  node proof/verify-writing.mjs site/dist
   node proof/verify-site-examples.mjs
 )
 (
@@ -45,7 +46,7 @@ cleanup_failure() {
 trap cleanup_failure ERR INT TERM
 for _ in $(seq 1 120); do curl -fsS "$SITE_URL/" >/dev/null 2>&1 && break; sleep .25; done
 curl -fsS "$SITE_URL/" | grep -F 'Let browser agents use it' >/dev/null
-for route in /demo/ /docs/ /docs/quickstart/ /docs/browser-support/ /docs/security/ /docs/reference/ /examples/ /examples/operations/ /examples/inventory/ /examples/support/ /examples/analytics/; do curl -fsS "$SITE_URL$route" >/dev/null; done
+for route in /docs/ /docs/quickstart/ /docs/browser-support/ /docs/security/ /docs/reference/ /examples/ /examples/operations/ /examples/inventory/ /examples/support/ /examples/analytics/; do curl -fsS "$SITE_URL$route" >/dev/null; done
 SITE_URL="$SITE_URL" BROWSER_PATH="$BROWSER_PATH" OUTPUT_DIR="$TARGET/browser" node "$TARGET/repo/proof/verify-site-browser.mjs"
 for file in package.json tsconfig.json wrangler.jsonc api.ts index.ts; do curl -fsS "$SITE_URL/downloads/starter/$file" -o "$TARGET/consumer/$file"; done
 curl -fsS "$SITE_URL/downloads/mulder-0.1.0.tgz" -o "$TARGET/consumer/mulder-0.1.0.tgz"
@@ -74,4 +75,5 @@ CONSUMER_URL="$CONSUMER_URL" BROWSER_PATH="$BROWSER_PATH" OUTPUT_PATH="$TARGET/t
 kill "$CONSUMER_PID" >/dev/null 2>&1 || true
 CONSUMER_PID=""
 trap - ERR INT TERM
-echo "MULDER_WEBSITE_READY_OK:$SITE_URL:12-routes:4-examples:1-native-call"
+[[ "$(curl -sS -o /dev/null -w '%{http_code}' "$SITE_URL/demo/")" == "404" ]]
+echo "MULDER_WEBSITE_READY_OK:$SITE_URL:11-routes:4-examples:1-native-call"

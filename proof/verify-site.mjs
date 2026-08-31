@@ -3,20 +3,20 @@ import { join } from "node:path";
 
 const root = process.argv[2];
 if (!root) throw new Error("site output path is required");
-const requiredRoutes = ["/", "/demo/", "/docs/", "/docs/quickstart/", "/docs/browser-support/", "/docs/security/", "/docs/reference/", "/examples/", "/examples/operations/", "/examples/inventory/", "/examples/support/", "/examples/analytics/"];
+const requiredRoutes = ["/", "/docs/", "/docs/quickstart/", "/docs/browser-support/", "/docs/security/", "/docs/reference/", "/examples/", "/examples/operations/", "/examples/inventory/", "/examples/support/", "/examples/analytics/"];
 const routeFile = (path) => path === "/" ? join(root, "index.html") : join(root, path, "index.html");
 for (const route of requiredRoutes) await access(routeFile(route));
 
 const home = await readFile(routeFile("/"), "utf8");
-for (const phrase of ["Let browser agents use it", "Not another generated MCP server", "Existing API stays unchanged", "Build your first tool"]) {
+for (const phrase of ["Let browser agents use it", "No extra MCP server to build", "Existing API stays unchanged", "Build your first tool"]) {
   if (!home.includes(phrase)) throw new Error(`home is missing: ${phrase}`);
 }
 const quickstart = await readFile(routeFile("/docs/quickstart/"), "utf8");
-for (const phrase of ["Private beta", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check", "WebMCP-capable Chrome"]) {
+for (const phrase of ["Local beta", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check", "Chrome build that supports WebMCP"]) {
   if (!quickstart.includes(phrase)) throw new Error(`quickstart is missing: ${phrase}`);
 }
 const security = await readFile(routeFile("/docs/security/"), "utf8");
-for (const phrase of ["does not give the browser your API credential", "does not provide a verified browser-agent identity", "Generated writes are not part of the package"]) {
+for (const phrase of ["does not give your API key to the browser", "cannot verify which browser agent made the call", "does not generate tools that change data"]) {
   if (!security.includes(phrase)) throw new Error(`security is missing: ${phrase}`);
 }
 
