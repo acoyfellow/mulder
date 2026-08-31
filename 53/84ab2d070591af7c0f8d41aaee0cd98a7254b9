@@ -1,0 +1,23 @@
+proof/verify-kumo.mjs
+  s_99b55ecf7d26fa::t_ad74ccdce34b89 1-31
+proof/website-ready.sh
+  s_99b55ecf7d26fa::t_ec69d6717bac5a 31
+site/src/styles.css
+  s_99b55ecf7d26fa::t_59682c19e110e5 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5384ab2d070591af7c0f8d41aaee0cd98a7254b9",
+  "prompts": {},
+  "sessions": {
+    "s_99b55ecf7d26fa": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a01133-f7dc-78e5-bff4-bbe27a662c2a",
+        "model": "grok-4.6"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
