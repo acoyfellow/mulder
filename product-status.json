@@ -1,5 +1,5 @@
 {
-  "state": "installable-release-candidate",
+  "state": "public-preview",
   "goal": "A secure WebMCP companion package for the documented read-only OpenAPI subset can be installed and used by an independent Worker.",
   "completed": [
     "Committed a public-registry lockfile and proved an isolated frozen producer install.",
@@ -18,12 +18,13 @@
     "Collected the complete native discovery set after quiescence and required exactly get_weather.",
     "Planted shadow_write only in the packed artifact and proved the clean-consumer gate rejects it.",
     "Proved the consumer API source remained byte-for-byte unchanged.",
-    "Passed consumer TypeScript compilation and Wrangler deploy dry-run bundle inspection."
+    "Passed consumer TypeScript compilation and Wrangler deploy dry-run bundle inspection.",
+    "Published the product website and package download at https://mulder.coey.dev.",
+    "Loaded the live homepage and quickstart in Chrome.",
+    "Installed only the live tutorial files in an empty consumer and completed one native WebMCP call."
   ],
   "remaining": [],
   "excluded": [
-    "Public deployment",
-    "Remote creation",
     "npm publication",
     "General OpenAPI support",
     "Generated mutating tools",
