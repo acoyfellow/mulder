@@ -67,9 +67,10 @@ trap cleanup_failure ERR
 for _ in $(seq 1 120); do curl -fsS "$URL" >/dev/null 2>&1 && break; sleep .25; done
 curl -fsS "$URL" | grep -F 'Waiting for the native call' >/dev/null
 READY="$TARGET/recording-ready"
+NATIVE_DONE="$TARGET/native-done"
 (
   cd "$TARGET/consumer"
-  PATH="$TARGET/consumer/node_modules/.bin:$PATH" DEMO_URL="$URL" VIDEO_OUTPUT="$WEBM" RECORDING_READY="$READY" node record-polished-demo.mjs
+  PATH="$TARGET/consumer/node_modules/.bin:$PATH" DEMO_URL="$URL" VIDEO_OUTPUT="$WEBM" RECORDING_READY="$READY" NATIVE_DONE="$NATIVE_DONE" node record-polished-demo.mjs
 ) > "$TARGET/recording.log" 2>&1 &
 RECORD_PID=$!
 for _ in $(seq 1 120); do [[ -f "$READY" ]] && break; kill -0 "$RECORD_PID" 2>/dev/null || { cat "$TARGET/recording.log" >&2; exit 1; }; sleep .25; done
@@ -78,6 +79,7 @@ for _ in $(seq 1 120); do [[ -f "$READY" ]] && break; kill -0 "$RECORD_PID" 2>/d
   cd "$TARGET/consumer"
   BROWSER_PATH="$BROWSER_PATH" CONSUMER_URL="http://127.0.0.1:$PORT" CONSUMER_MARKER="$CONSUMER_MARKER" OUTPUT_PATH="$TARGET/native.json" PRODUCER_ROOT="$ROOT" node native-proof.mjs
 )
+printf 'done\n' > "$NATIVE_DONE"
 wait "$RECORD_PID" || { cat "$TARGET/recording.log" >&2; exit 1; }
 [[ -s "$WEBM" ]]
 rm -f "$MP4"
