@@ -19,6 +19,7 @@
     "dev": "wrangler dev --port 8891 --inspector-port 0",
     "site:build": "bash site/build.sh",
     "site:dev": "bun run site:build && wrangler dev --config site/wrangler.jsonc --port 8895 --inspector-port 0",
+    "site:deploy": "bun run site:build && wrangler deploy --config site/wrangler.jsonc",
     "video:studio": "npm --prefix video run studio",
     "video:render": "npm --prefix video run render",
     "video:check": "npm --prefix video run check",

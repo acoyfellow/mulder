@@ -12,7 +12,7 @@ for (const phrase of ["Let browser agents use it", "No extra MCP server to build
   if (!home.includes(phrase)) throw new Error(`home is missing: ${phrase}`);
 }
 const quickstart = await readFile(routeFile("/docs/quickstart/"), "utf8");
-for (const phrase of ["Local beta", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check", "Chrome build that supports WebMCP"]) {
+for (const phrase of ["Public preview", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check", "Chrome build that supports WebMCP"]) {
   if (!quickstart.includes(phrase)) throw new Error(`quickstart is missing: ${phrase}`);
 }
 const security = await readFile(routeFile("/docs/security/"), "utf8");
@@ -45,7 +45,7 @@ for (const file of htmlFiles) {
 }
 const search = JSON.parse(await readFile(join(root, "search-index.json"), "utf8"));
 if (search.length !== requiredRoutes.length) throw new Error(`search index has ${search.length} pages`);
-for (const file of ["mulder-demo.mp4", "styles.css", "app.js", "og.svg", "demo-poster.svg", "downloads/mulder-0.1.0.tgz", "downloads/starter/package.json", "downloads/starter/index.ts", "downloads/starter/api.ts"]) {
+for (const file of ["mulder-demo.mp4", "styles.css", "app.js", "og.svg", "demo-poster.png", "downloads/mulder-0.1.0.tgz", "downloads/starter/package.json", "downloads/starter/index.ts", "downloads/starter/api.ts"]) {
   const info = await stat(join(root, file));
   if (!info.size) throw new Error(`empty asset: ${file}`);
 }

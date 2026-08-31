@@ -27,6 +27,7 @@ HOME="$TARGET/home" BUN_INSTALL_CACHE_DIR="$TARGET/cache" bun install --cwd "$TA
   bun run typecheck
   bun test
   bun run site:build
+  node proof/verify-marketing-video.mjs demo/mulder-demo.mp4 site/dist/mulder-demo.mp4
   node proof/verify-site.mjs site/dist
   node proof/verify-kumo.mjs site/dist
   node proof/verify-writing.mjs site/dist

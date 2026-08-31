@@ -1,26 +1,38 @@
 # Mulder
 
-> The API is out there.
+Mulder lets a browser agent use selected read-only parts of your existing API. You choose each operation in an OpenAPI 3.1 file. Your API continues to handle every request.
 
-Mulder gives a supported OpenAPI 3.1 API a same-origin native WebMCP companion page at Cloudflare's edge. Explicitly enabled operations become tools. The API implementation does not change. Unsupported semantics fail compilation instead of becoming weaker tools.
-
-This is a local, private installable release candidate. It has no remote and no public deployment. The package remains marked private so an explicit publication decision is still required.
+Mulder is a public preview. The package remains private on npm. You can download the checked package file from the product website.
 
 ## Product website
 
-The website is the canonical product introduction, tutorial, example library, security guide, browser support guide, and API reference.
+The website contains the product overview, tutorial, task examples, security explanation, browser support details, and API reference.
+
+Visit <https://mulder.coey.dev>.
 
 ```bash
 bun run site:dev
 ```
 
-Open <http://127.0.0.1:8895>. The local site includes the checked private-beta package artifact and downloadable starter used by its quickstart.
+Open <http://127.0.0.1:8895>. The local site includes the checked package file and downloadable starter used by its quickstart.
 
-The website-readiness gate builds every route, runs all four examples, checks desktop and mobile rendering, downloads only the published tutorial assets into an empty consumer, and completes one native Chrome WebMCP call:
+The website check builds every route and runs all four examples. It checks desktop and mobile layouts. It also downloads the tutorial files into an empty project and completes one WebMCP call in Chrome.
 
 ```bash
 bash proof/website-ready.sh
 ```
+
+## Marketing video
+
+The Remotion project in `video/` builds the marketing video shown on the homepage.
+
+```bash
+npm --prefix video install
+bun run video:studio
+bun run video:render
+```
+
+Edit the words and timing in `video/src/story.ts`. Add only licensed music and record its license in `video/public/music/LICENSES.md`.
 
 ## First result
 
