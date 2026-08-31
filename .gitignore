@@ -3,6 +3,7 @@ dist/
 *.tgz
 demo/*.webm
 site/dist/
+video/renders/
 .wrangler/
 .guardrail/
 .pi/

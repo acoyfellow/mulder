@@ -1,0 +1,23 @@
+{
+  "name": "mulder-video-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts MulderLaunch renders/mulder-launch.mp4",
+    "still": "remotion still src/index.ts MulderLaunch renders/mulder-launch.png --frame=1140",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.519",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "remotion": "4.0.519"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "7.0.2"
+  }
+}
