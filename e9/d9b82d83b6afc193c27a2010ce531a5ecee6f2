@@ -1,0 +1,19 @@
+proof/website-ready.sh
+  s_e987d30b51587b::t_024acf7b91d0ab 32,49,78-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e9d9b82d83b6afc193c27a2010ce531a5ecee6f2",
+  "prompts": {},
+  "sessions": {
+    "s_e987d30b51587b": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a00ffb-0c59-74f4-8153-ea729ca0edd6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
