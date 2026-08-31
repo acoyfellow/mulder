@@ -24,7 +24,7 @@ async function capture(name, width, height, path, expected) {
   if (!mobileViewport && !desktopViewport) throw new Error(`${name} has wrong viewport ${receipt.inspected.width}x${receipt.inspected.height}`);
   const png = await readFile(screenshotPath);
   if (png.length < 20_000 || png.toString("ascii", 1, 4) !== "PNG") throw new Error(`${name} screenshot is invalid`);
-  if (png.readUInt32BE(16) !== receipt.inspected.width || png.readUInt32BE(20) !== receipt.inspected.height) throw new Error(`${name} screenshot has wrong dimensions`);
+  if (png.readUInt32BE(16) !== width || png.readUInt32BE(20) !== height) throw new Error(`${name} screenshot has wrong dimensions`);
 }
 
 await capture("desktop-home", 1440, 1000, "/", "Let browser agents use it");
