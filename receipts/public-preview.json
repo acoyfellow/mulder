@@ -1,18 +1,19 @@
 {
   "status": "published",
-  "sourceCommit": "ec94f53",
+  "sourceCommit": "96f9adc1ad0f14881b6fb596981c7b4246c016aa",
   "url": "https://mulder.coey.dev",
   "worker": "mulder-site",
-  "workerVersion": "252bf0ff-b169-446f-9333-4955e0d8e783",
+  "workerVersion": "4cad2ff2-199d-4741-a74c-b705d3b1eb29",
   "routesChecked": 11,
   "package": {
-    "path": "/downloads/mulder-0.1.0.tgz",
-    "sha256": "4d558d9046f4e454b57446eb8021af768cefd61b026547634412041a7fd52134",
+    "path": "/downloads/acoyfellow-mulder-0.1.0.tgz",
+    "name": "@acoyfellow/mulder",
+    "sha256": "07955b2ae0f32e25194dd1439b4ed0bec0d0c4b9df551ebf3df9eb07ce8058de",
     "files": 9
   },
   "video": {
     "path": "/mulder-demo.mp4",
-    "sha256": "d63c5e1e20fe7657605cf68ea78e258ce3304913ae1c5bf1636d5d98b13c3168",
+    "sha256": "19284681f5e91b5ddf708bdd0a00ed941dd6da064939156164a4e023c6332b0b",
     "durationSeconds": 40.04,
     "width": 1920,
     "height": 1080,
@@ -24,7 +25,11 @@
     "clean consumer installed live tutorial files",
     "Chrome discovered exactly get_service_health",
     "Chrome completed the tool call",
-    "the existing API received exactly one request"
+    "the existing API received exactly one request",
+    "the service worker activated and cached the app shell",
+    "the video element and source both use 16:9",
+    "code examples render at 15px with a 27px line height",
+    "Lighthouse accessibility, best practices, and SEO each scored 100"
   ],
   "retiredCustomDomain": "formwing-test.coey.dev"
 }
