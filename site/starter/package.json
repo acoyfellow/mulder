@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "mulder": "file:./mulder-0.1.0.tgz"
+    "@acoyfellow/mulder": "file:./acoyfellow-mulder-0.1.0.tgz"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260527.1",

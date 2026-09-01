@@ -31,7 +31,7 @@ cat > "$TARGET/consumer/package.json" <<JSON
   "name": "mulder-cmux-demo",
   "private": true,
   "type": "module",
-  "dependencies": { "mulder": "file:$ARTIFACT" },
+  "dependencies": { "@acoyfellow/mulder": "file:$ARTIFACT" },
   "devDependencies": { "@cloudflare/workers-types": "4.20260527.1", "typescript": "6.0.3", "wrangler": "4.95.0" }
 }
 JSON
@@ -40,7 +40,7 @@ rm -rf "$TARGET/producer"
   cd "$TARGET/consumer"
   HOME="$TARGET/home" NPM_CONFIG_CACHE="$TARGET/cache" NPM_CONFIG_REGISTRY=https://registry.npmjs.org npm install --ignore-scripts >/dev/null
 )
-[[ -d "$TARGET/consumer/node_modules/mulder" && ! -L "$TARGET/consumer/node_modules/mulder" ]]
+[[ -d "$TARGET/consumer/node_modules/@acoyfellow/mulder" && ! -L "$TARGET/consumer/node_modules/@acoyfellow/mulder" ]]
 API_SHA=$(shasum -a 256 "$TARGET/consumer/api.ts" | awk '{print $1}')
 POLICY="(version 1)(allow default)(deny file-read* (subpath \"$ROOT\"))"
 (

@@ -52,7 +52,7 @@ npm pack --ignore-scripts
 A Worker imports only the public package entry point:
 
 ```ts
-import { createWebMcpCompanion } from "mulder";
+import { createWebMcpCompanion } from "@acoyfellow/mulder";
 
 const companion = createWebMcpCompanion({
   document: openApiDocument,

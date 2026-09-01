@@ -6,7 +6,7 @@ export const story = {
   question: "Is checkout-api healthy in us-east?",
   tool: "get_service_health",
   unchanged: ["Your existing API handled the request.", "Its code did not change."],
-  boundaries: ["No separate MCP server.", "API keys stay on your server."],
+  boundaries: ["Add Mulder to your existing Worker.", "API keys stay on your server."],
   callToAction: "Give your website its first browser tool.",
   address: "mulder.coey.dev",
 } as const;

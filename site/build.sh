@@ -7,5 +7,5 @@ rm -rf "$TARGET"
 mkdir -p "$TARGET"
 bun run build
 npm pack --ignore-scripts --pack-destination "$TARGET" >/dev/null
-TARBALL=$(find "$TARGET" -name 'mulder-*.tgz' -type f -print -quit)
+TARBALL=$(find "$TARGET" -name 'acoyfellow-mulder-*.tgz' -type f -print -quit)
 MULDER_TARBALL="$TARBALL" node site/build.mjs

@@ -1,3 +1,5 @@
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
+
 const menu = document.querySelector("[data-menu]");
 const navigation = document.querySelector("[data-navigation]");
 menu?.addEventListener("click", () => {

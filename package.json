@@ -1,7 +1,10 @@
 {
-  "name": "mulder",
+  "name": "@acoyfellow/mulder",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://mulder.coey.dev",
+  "repository": { "type": "git", "url": "https://github.com/acoyfellow/mulder.git" },
+  "bugs": { "url": "https://github.com/acoyfellow/mulder/issues" },
   "type": "module",
   "sideEffects": false,
   "exports": {

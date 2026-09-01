@@ -31,6 +31,7 @@ HOME="$TARGET/home" BUN_INSTALL_CACHE_DIR="$TARGET/cache" bun install --cwd "$TA
   node proof/verify-site.mjs site/dist
   node proof/verify-kumo.mjs site/dist
   node proof/verify-writing.mjs site/dist
+  node proof/verify-pwa.mjs site/dist
   node proof/verify-site-examples.mjs
 )
 (
@@ -50,7 +51,7 @@ curl -fsS "$SITE_URL/" | grep -F 'Let browser agents use it' >/dev/null
 for route in /docs/ /docs/quickstart/ /docs/browser-support/ /docs/security/ /docs/reference/ /examples/ /examples/operations/ /examples/inventory/ /examples/support/ /examples/analytics/; do curl -fsS "$SITE_URL$route" >/dev/null; done
 SITE_URL="$SITE_URL" BROWSER_PATH="$BROWSER_PATH" OUTPUT_DIR="$TARGET/browser" node "$TARGET/repo/proof/verify-site-browser.mjs"
 for file in package.json tsconfig.json wrangler.jsonc api.ts index.ts; do curl -fsS "$SITE_URL/downloads/starter/$file" -o "$TARGET/consumer/$file"; done
-curl -fsS "$SITE_URL/downloads/mulder-0.1.0.tgz" -o "$TARGET/consumer/mulder-0.1.0.tgz"
+curl -fsS "$SITE_URL/downloads/acoyfellow-mulder-0.1.0.tgz" -o "$TARGET/consumer/acoyfellow-mulder-0.1.0.tgz"
 API_SHA=$(shasum -a 256 "$TARGET/consumer/api.ts" | awk '{print $1}')
 (
   cd "$TARGET/consumer"
@@ -58,8 +59,8 @@ API_SHA=$(shasum -a 256 "$TARGET/consumer/api.ts" | awk '{print $1}')
   npm run check
   ./node_modules/.bin/wrangler deploy --dry-run --outdir "$TARGET/consumer-bundle" >/dev/null
 )
-[[ -d "$TARGET/consumer/node_modules/mulder" && ! -L "$TARGET/consumer/node_modules/mulder" ]]
-if grep -R -F "$ROOT" "$TARGET/consumer/node_modules/mulder" "$TARGET/consumer-bundle" >/dev/null; then echo "consumer contains producer path" >&2; exit 1; fi
+[[ -d "$TARGET/consumer/node_modules/@acoyfellow/mulder" && ! -L "$TARGET/consumer/node_modules/@acoyfellow/mulder" ]]
+if grep -R -F "$ROOT" "$TARGET/consumer/node_modules/@acoyfellow/mulder" "$TARGET/consumer-bundle" >/dev/null; then echo "consumer contains producer path" >&2; exit 1; fi
 POLICY="(version 1)(allow default)(deny file-read* (subpath \"$ROOT\"))(deny file-read* (subpath \"$TARGET/repo\"))"
 (
   cd "$TARGET/consumer"

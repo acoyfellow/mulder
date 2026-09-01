@@ -43,7 +43,7 @@ fi
 ARTIFACT_SHA=$(shasum -a 256 "$ARTIFACT" | awk '{print $1}')
 node - "$TARGET/extracted/package/package.json" <<'NODE'
 const manifest = require(process.argv[2]);
-if (manifest.name !== "mulder" || manifest.version !== "0.1.0") throw new Error("package identity mismatch");
+if (manifest.name !== "@acoyfellow/mulder" || manifest.version !== "0.1.0") throw new Error("package identity mismatch");
 if (manifest.exports?.["."]?.import !== "./dist/public.js" || manifest.exports?.["."]?.types !== "./dist/public.d.ts") throw new Error("public export mismatch");
 if (manifest.dependencies && Object.keys(manifest.dependencies).length) throw new Error("runtime dependencies are not allowed");
 NODE
@@ -65,7 +65,7 @@ cat > "$CONSUMER/package.json" <<JSON
   "name": "mulder-clean-consumer",
   "private": true,
   "type": "module",
-  "dependencies": { "mulder": "file:../artifact/mulder-under-test.tgz" },
+  "dependencies": { "@acoyfellow/mulder": "file:../artifact/mulder-under-test.tgz" },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260527.1",
     "typescript": "6.0.3",
@@ -85,17 +85,17 @@ node - "$CONSUMER/package-lock.json" <<'NODE'
 const lock = require(process.argv[2]);
 for (const [path, entry] of Object.entries(lock.packages)) {
   if (!path.startsWith("node_modules/")) continue;
-  if (path === "node_modules/mulder") {
+  if (path === "node_modules/@acoyfellow/mulder") {
     if (entry.resolved !== "file:../artifact/mulder-under-test.tgz" || !entry.integrity) throw new Error("Mulder is not locked to the artifact");
     continue;
   }
   if (entry.link || !entry.resolved?.startsWith("https://registry.npmjs.org/") || !entry.integrity) throw new Error(`non-public or unlocked dependency ${path}`);
 }
 NODE
-[[ -d "$CONSUMER/node_modules/mulder" && ! -L "$CONSUMER/node_modules/mulder" ]]
+[[ -d "$CONSUMER/node_modules/@acoyfellow/mulder" && ! -L "$CONSUMER/node_modules/@acoyfellow/mulder" ]]
 CONSUMER_REAL=$(cd "$CONSUMER" && pwd -P)
-RESOLVED=$(cd "$CONSUMER" && node --input-type=module -e 'console.log(import.meta.resolve("mulder"))')
-case "$RESOLVED" in file://$CONSUMER_REAL/node_modules/mulder/dist/public.js) ;; *) echo "Mulder resolved outside installed artifact: $RESOLVED" >&2; exit 1 ;; esac
+RESOLVED=$(cd "$CONSUMER" && node --input-type=module -e 'console.log(import.meta.resolve("@acoyfellow/mulder"))')
+case "$RESOLVED" in file://$CONSUMER_REAL/node_modules/@acoyfellow/mulder/dist/public.js) ;; *) echo "Mulder resolved outside installed artifact: $RESOLVED" >&2; exit 1 ;; esac
 POLICY="(version 1)(allow default)(deny file-read* (subpath \"$ROOT\"))"
 if sandbox-exec -p "$POLICY" test -r "$ROOT/package.json"; then echo "producer read negative control failed" >&2; exit 1; fi
 
@@ -124,9 +124,9 @@ MAP=$(find "$TARGET/bundle" -name index.js.map -type f -print -quit)
 [[ -s "$BUNDLE" && -s "$MAP" ]]
 grep -F 'consumer-owned-unchanged-api' "$BUNDLE" >/dev/null
 grep -F "$CONSUMER_MARKER" "$BUNDLE" >/dev/null
-grep -F 'node_modules/mulder/dist/public.js' "$MAP" >/dev/null
+grep -F 'node_modules/@acoyfellow/mulder/dist/public.js' "$MAP" >/dev/null
 if grep -R -I -F "$ROOT" "$CONSUMER" "$TARGET/bundle" "$TARGET/native.json"; then echo "consumer output contains producer path" >&2; exit 1; fi
-if grep -F 'from "mulder"' "$BUNDLE" || grep -F "from 'mulder'" "$BUNDLE"; then echo "consumer bundle retains unresolved Mulder import" >&2; exit 1; fi
+if grep -F 'from "@acoyfellow/mulder"' "$BUNDLE" || grep -F "from '@acoyfellow/mulder'" "$BUNDLE"; then echo "consumer bundle retains unresolved Mulder import" >&2; exit 1; fi
 API_SHA_AFTER=$(shasum -a 256 "$CONSUMER/api.ts" | awk '{print $1}')
 [[ "$API_SHA_BEFORE" == "$API_SHA_AFTER" ]]
 cd "$ROOT"

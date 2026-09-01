@@ -30,4 +30,17 @@ async function capture(name, width, height, path, expected) {
 await capture("desktop-home", 1440, 1000, "/", "Let browser agents use it");
 await capture("mobile-home", 390, 844, "/", "Build your first tool");
 await capture("desktop-quickstart", 1280, 900, "/docs/quickstart/", "Your first browser tool in ten minutes");
-console.log("MULDER_SITE_BROWSER_OK:desktop:mobile:quickstart");
+const pwa = await runWebMcpProof({
+  browserPath,
+  url: `${base}/`,
+  requiredToolNames: [],
+  calls: [],
+  inspectExpression: `(async () => {
+    const registration = await navigator.serviceWorker.ready;
+    const manifest = await fetch('/manifest.webmanifest').then((response) => response.json());
+    const cacheNames = await caches.keys();
+    return { state: registration.active?.state, name: manifest.name, display: manifest.display, icons: manifest.icons.length, cachedHome: Boolean(await caches.match('/')), cacheNames };
+  })()`,
+});
+if (pwa.inspected?.state !== "activated" || pwa.inspected?.name !== "Mulder" || pwa.inspected?.display !== "standalone" || pwa.inspected?.icons !== 3 || !pwa.inspected?.cachedHome) throw new Error(`PWA did not install: ${JSON.stringify(pwa.inspected)}`);
+console.log("MULDER_SITE_BROWSER_OK:desktop:mobile:quickstart:pwa");

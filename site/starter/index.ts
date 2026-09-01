@@ -1,4 +1,4 @@
-import { createWebMcpCompanion } from "mulder";
+import { createWebMcpCompanion } from "@acoyfellow/mulder";
 import { existingApi, requests } from "./api";
 
 const openApiDocument = {
