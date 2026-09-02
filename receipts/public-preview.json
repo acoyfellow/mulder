@@ -1,9 +1,9 @@
 {
   "status": "published",
-  "sourceCommit": "96f9adc1ad0f14881b6fb596981c7b4246c016aa",
+  "sourceCommit": "3ba3c45e2cc1fa4c381895293048daadd042a2e5",
   "url": "https://mulder.coey.dev",
   "worker": "mulder-site",
-  "workerVersion": "4cad2ff2-199d-4741-a74c-b705d3b1eb29",
+  "workerVersion": "7d009b6f-4223-41d8-9494-1adf8b111c43",
   "routesChecked": 11,
   "package": {
     "path": "/downloads/acoyfellow-mulder-0.1.0.tgz",
@@ -29,7 +29,8 @@
     "the service worker activated and cached the app shell",
     "the video element and source both use 16:9",
     "code examples render at 15px with a 27px line height",
-    "Lighthouse accessibility, best practices, and SEO each scored 100"
+    "Lighthouse accessibility, best practices, and SEO each scored 100",
+    "the live hero explains OpenAPI to WebMCP and how users connect"
   ],
   "retiredCustomDomain": "formwing-test.coey.dev"
 }
