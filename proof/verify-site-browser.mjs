@@ -28,7 +28,7 @@ async function capture(name, width, height, path, expected) {
 }
 
 await capture("desktop-home", 1440, 1000, "/", "Turn your app’s OpenAPI file into");
-await capture("mobile-home", 390, 844, "/", "Build your first tool");
+await capture("mobile-home", 390, 844, "/", "Add Mulder to your Worker");
 await capture("desktop-quickstart", 1280, 900, "/docs/quickstart/", "Your first browser tool in ten minutes");
 const pwa = await runWebMcpProof({
   browserPath,
