@@ -47,7 +47,7 @@ cleanup_failure() {
 }
 trap cleanup_failure ERR INT TERM
 for _ in $(seq 1 120); do curl -fsS "$SITE_URL/" >/dev/null 2>&1 && break; sleep .25; done
-curl -fsS "$SITE_URL/" | grep -F 'Let browser agents use it' >/dev/null
+curl -fsS "$SITE_URL/" | grep -F 'Turn your app’s OpenAPI file into' >/dev/null
 for route in /docs/ /docs/quickstart/ /docs/browser-support/ /docs/security/ /docs/reference/ /examples/ /examples/operations/ /examples/inventory/ /examples/support/ /examples/analytics/; do curl -fsS "$SITE_URL$route" >/dev/null; done
 SITE_URL="$SITE_URL" BROWSER_PATH="$BROWSER_PATH" OUTPUT_DIR="$TARGET/browser" node "$TARGET/repo/proof/verify-site-browser.mjs"
 for file in package.json tsconfig.json wrangler.jsonc api.ts index.ts; do curl -fsS "$SITE_URL/downloads/starter/$file" -o "$TARGET/consumer/$file"; done

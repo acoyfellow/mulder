@@ -27,7 +27,7 @@ async function capture(name, width, height, path, expected) {
   if (png.readUInt32BE(16) !== width || png.readUInt32BE(20) !== height) throw new Error(`${name} screenshot has wrong dimensions`);
 }
 
-await capture("desktop-home", 1440, 1000, "/", "Let browser agents use it");
+await capture("desktop-home", 1440, 1000, "/", "Turn your app’s OpenAPI file into");
 await capture("mobile-home", 390, 844, "/", "Build your first tool");
 await capture("desktop-quickstart", 1280, 900, "/docs/quickstart/", "Your first browser tool in ten minutes");
 const pwa = await runWebMcpProof({

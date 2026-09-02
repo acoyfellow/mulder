@@ -8,7 +8,7 @@ const routeFile = (path) => path === "/" ? join(root, "index.html") : join(root,
 for (const route of requiredRoutes) await access(routeFile(route));
 
 const home = await readFile(routeFile("/"), "utf8");
-for (const phrase of ["Let browser agents use it", "Add Mulder to your existing Worker", "Existing API stays unchanged", "Build your first tool"]) {
+for (const phrase of ["Turn your app’s OpenAPI file into", "How users connect", "Runs in your existing Worker", "Add Mulder to your Worker"]) {
   if (!home.includes(phrase)) throw new Error(`home is missing: ${phrase}`);
 }
 const quickstart = await readFile(routeFile("/docs/quickstart/"), "utf8");
