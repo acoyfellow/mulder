@@ -60,9 +60,25 @@ describe("OpenAPI to WebMCP", () => {
     expect(dispatches).toBe(1);
   });
 
-  test("rejects generated mutating operations before publication", () => {
-    const document = { openapi: "3.1.0", paths: { "/items": { post: { operationId: "create_item", "x-webmcp-enabled": true } } } } as OpenApiDocument;
-    expect(() => generateTools(document)).toThrow("generated tools are read-only");
+  test("requires explicit approval and a bounded JSON schema for generated writes", async () => {
+    const unapproved = { openapi: "3.1.0", paths: { "/items": { post: { operationId: "create_item", "x-webmcp-enabled": true } } } } as OpenApiDocument;
+    expect(() => generateTools(unapproved)).toThrow("must require approval");
+    const document = { openapi: "3.1.0", paths: { "/items/{id}": { post: {
+      operationId: "create_item",
+      "x-webmcp-enabled": true,
+      "x-webmcp-approval-required": true,
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", pattern: "^[a-z]+$" } }],
+      requestBody: { required: true, content: { "application/json": { schema: { type: "object", additionalProperties: false, required: ["value"], properties: { value: { type: "string", maxLength: 20 } } } } } },
+    } } } } as OpenApiDocument;
+    const tool = generateTools(document)[0];
+    expect(tool.operation.requiresApproval).toBe(true);
+    expect(tool.annotations).toEqual({ readOnlyHint: false, destructiveHint: true });
+    const request = buildRequest(tool, { id: "alpha", body: { value: "ready" } }, "https://mulder.test");
+    expect(request.url).toBe("https://mulder.test/items/alpha");
+    expect(await request.json() as unknown).toEqual({ value: "ready" });
+    let dispatches = 0;
+    await expect(executeTool(tool, { id: "alpha", body: { value: "ready" } }, "https://mulder.test", () => { dispatches += 1; return Response.json({}); })).rejects.toThrow("cannot use direct dispatch");
+    expect(dispatches).toBe(0);
   });
 
   test("validates the complete input before request construction", async () => {
@@ -74,8 +90,8 @@ describe("OpenAPI to WebMCP", () => {
         limit: { type: "integer", minimum: 1, maximum: 10 },
         body: { type: "object", additionalProperties: false, required: ["name"], properties: { name: { type: "string", minLength: 2 }, active: { type: "boolean" } } },
       } },
-      annotations: { readOnlyHint: false },
-      operation: { method: "POST", path: "/items/{id}", pathParameters: ["id"], queryParameters: ["limit"], hasBody: true },
+      annotations: { readOnlyHint: false, destructiveHint: true },
+      operation: { method: "POST" as const, path: "/items/{id}", pathParameters: ["id"], queryParameters: ["limit"], hasBody: true, requiresApproval: true },
     };
     const request = buildRequest(tool, { id: "alpha", limit: 2, body: { name: "ok", active: true } }, "https://mulder.test");
     expect(request.url).toBe("https://mulder.test/items/alpha?limit=2");

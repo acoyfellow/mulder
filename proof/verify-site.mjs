@@ -8,15 +8,15 @@ const routeFile = (path) => path === "/" ? join(root, "index.html") : join(root,
 for (const route of requiredRoutes) await access(routeFile(route));
 
 const home = await readFile(routeFile("/"), "utf8");
-for (const phrase of ["Turn your app’s OpenAPI file into", "How users connect", "Runs in your existing Worker", "Add Mulder to your Worker"]) {
+for (const phrase of ["Turn your existing API into", "One contract, two browser-facing adapters", "Fail-closed compilation", "Build your first tool"]) {
   if (!home.includes(phrase)) throw new Error(`home is missing: ${phrase}`);
 }
 const quickstart = await readFile(routeFile("/docs/quickstart/"), "utf8");
-for (const phrase of ["Public preview", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check", "Chrome build that supports WebMCP"]) {
+for (const phrase of ["Public preview", "SHA-256", "x-webmcp-enabled", "createWebMcpCompanion", "npm run check"]) {
   if (!quickstart.includes(phrase)) throw new Error(`quickstart is missing: ${phrase}`);
 }
 const security = await readFile(routeFile("/docs/security/"), "utf8");
-for (const phrase of ["does not give your API key to the browser", "cannot verify which browser agent made the call", "does not generate tools that change data"]) {
+for (const phrase of ["Authority boundaries", "x-webmcp-approval-required", "annotations", "Which browser agent made a call"]) {
   if (!security.includes(phrase)) throw new Error(`security is missing: ${phrase}`);
 }
 
@@ -45,7 +45,7 @@ for (const file of htmlFiles) {
 }
 const search = JSON.parse(await readFile(join(root, "search-index.json"), "utf8"));
 if (search.length !== requiredRoutes.length) throw new Error(`search index has ${search.length} pages`);
-for (const file of ["mulder-demo.mp4", "styles.css", "app.js", "og.svg", "demo-poster.png", "downloads/acoyfellow-mulder-0.1.0.tgz", "downloads/starter/package.json", "downloads/starter/index.ts", "downloads/starter/api.ts"]) {
+for (const file of ["mulder-demo.mp4", "styles.css", "enhancements.css", "app.js", "og.svg", "demo-poster.png", "demo/manifest.json", "downloads/acoyfellow-mulder-0.1.0.tgz", "downloads/acoyfellow-mulder-0.1.0.tgz.sha256", "downloads/starter/package.json", "downloads/starter/index.ts", "downloads/starter/api.ts"]) {
   const info = await stat(join(root, file));
   if (!info.size) throw new Error(`empty asset: ${file}`);
 }

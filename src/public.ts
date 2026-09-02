@@ -1,5 +1,6 @@
 import { createWebMcpCompanion, injectWebMcpBootstrap } from "./companion";
+import { buildRequest, generateTools } from "./openapi";
 
-export { createWebMcpCompanion, injectWebMcpBootstrap };
+export { buildRequest, createWebMcpCompanion, generateTools, injectWebMcpBootstrap };
 export type { WebMcpCompanion, WebMcpCompanionOptions } from "./companion";
 export type { GeneratedTool, JsonSchema, OpenApiDocument, OpenApiOperation, OpenApiParameter } from "./openapi";

@@ -9,6 +9,8 @@ export type JsonSchema = {
   maximum?: number;
   minLength?: number;
   maxLength?: number;
+  minItems?: number;
+  maxItems?: number;
   pattern?: string;
   additionalProperties?: boolean;
   [keyword: string]: unknown;
@@ -36,6 +38,7 @@ export type OpenApiOperation = {
     content?: Record<string, { schema?: JsonSchema }>;
   };
   "x-webmcp-enabled"?: boolean;
+  "x-webmcp-approval-required"?: boolean;
 };
 
 export type OpenApiDocument = {
@@ -47,19 +50,20 @@ export type GeneratedTool = {
   name: string;
   description: string;
   inputSchema: JsonSchema;
-  annotations: { readOnlyHint: boolean };
+  annotations: { readOnlyHint: boolean; destructiveHint: boolean };
   operation: {
-    method: string;
+    method: "GET" | "POST" | "DELETE";
     path: string;
     pathParameters: string[];
     queryParameters: string[];
     hasBody: boolean;
+    requiresApproval: boolean;
   };
 };
 
 const methods = new Set(["get", "post", "put", "patch", "delete"]);
 const scalarTypes = new Set(["string", "boolean", "integer", "number"]);
-const schemaKeywords = new Set(["type", "description", "properties", "required", "items", "enum", "minimum", "maximum", "minLength", "maxLength", "pattern", "additionalProperties"]);
+const schemaKeywords = new Set(["type", "description", "properties", "required", "items", "enum", "minimum", "maximum", "minLength", "maxLength", "minItems", "maxItems", "pattern", "additionalProperties"]);
 
 function fail(context: string, message: string): never {
   throw new Error(`${context}: ${message}`);
@@ -87,7 +91,7 @@ function assertSupportedSchema(schema: JsonSchema | undefined, context: string, 
   }
 }
 
-function operationSchema(operation: OpenApiOperation, method: string, path: string): { schema: JsonSchema; pathParameters: string[]; queryParameters: string[]; hasBody: boolean } {
+function operationSchema(operation: OpenApiOperation, method: "GET" | "POST" | "DELETE", path: string): { schema: JsonSchema; pathParameters: string[]; queryParameters: string[]; hasBody: boolean } {
   const context = `${method} ${path}`;
   const properties: Record<string, JsonSchema> = {};
   const required: string[] = [];
@@ -118,13 +122,22 @@ function operationSchema(operation: OpenApiOperation, method: string, path: stri
   if (new Set(templateNames).size !== templateNames.length) fail(context, "duplicate path template parameter");
   if (templateNames.some((name) => !pathParameters.includes(name)) || pathParameters.some((name) => !templateNames.includes(name))) fail(context, "path template and parameters do not match");
 
-  if (operation.requestBody) fail(context, "request bodies are unsupported for generated read-only tools");
+  if (method === "GET" && operation.requestBody) fail(context, "GET request bodies are unsupported");
+  if (method === "DELETE" && operation.requestBody) fail(context, "DELETE request bodies are unsupported");
+  if (method === "POST") {
+    const content = operation.requestBody?.content;
+    if (!content || Object.keys(content).length !== 1 || !content["application/json"]) fail(context, "POST requires one application/json request body");
+    const bodySchema = content["application/json"].schema;
+    assertSupportedSchema(bodySchema, `${context} body`, true);
+    properties.body = bodySchema;
+    if (operation.requestBody?.required !== false) required.push("body");
+  }
 
   return {
     schema: { type: "object", properties, required, additionalProperties: false },
     pathParameters,
     queryParameters,
-    hasBody: false,
+    hasBody: method === "POST",
   };
 }
 
@@ -138,22 +151,27 @@ export function generateTools(document: OpenApiDocument): GeneratedTool[] {
     for (const [method, operation] of Object.entries(pathItem)) {
       const normalizedMethod = method.toLowerCase();
       if (!methods.has(normalizedMethod) || operation["x-webmcp-enabled"] !== true) continue;
-      if (normalizedMethod !== "get") throw new Error(`enabled operation ${normalizedMethod.toUpperCase()} ${path} is mutating; generated tools are read-only`);
-      if (!operation.operationId) throw new Error(`enabled operation ${normalizedMethod.toUpperCase()} ${path} needs operationId`);
+      const methodName = normalizedMethod.toUpperCase();
+      if (methodName !== "GET" && methodName !== "POST" && methodName !== "DELETE") throw new Error(`enabled operation ${methodName} ${path} uses an unsupported method`);
+      const requiresApproval = methodName !== "GET";
+      if (requiresApproval && operation["x-webmcp-approval-required"] !== true) throw new Error(`enabled operation ${methodName} ${path} must require approval`);
+      if (!requiresApproval && operation["x-webmcp-approval-required"] === true) throw new Error(`read-only operation ${methodName} ${path} cannot require write approval`);
+      if (!operation.operationId) throw new Error(`enabled operation ${methodName} ${path} needs operationId`);
       if (names.has(operation.operationId)) throw new Error(`duplicate operationId ${operation.operationId}`);
       names.add(operation.operationId);
-      const compiled = operationSchema(operation, normalizedMethod.toUpperCase(), path);
+      const compiled = operationSchema(operation, methodName, path);
       generated.push({
         name: operation.operationId,
-        description: operation.description ?? operation.summary ?? `${normalizedMethod.toUpperCase()} ${path}`,
+        description: operation.description ?? operation.summary ?? `${methodName} ${path}`,
         inputSchema: compiled.schema,
-        annotations: { readOnlyHint: normalizedMethod === "get" },
+        annotations: { readOnlyHint: !requiresApproval, destructiveHint: requiresApproval },
         operation: {
-          method: normalizedMethod.toUpperCase(),
+          method: methodName,
           path,
           pathParameters: compiled.pathParameters,
           queryParameters: compiled.queryParameters,
           hasBody: compiled.hasBody,
+          requiresApproval,
         },
       });
     }
@@ -183,6 +201,8 @@ function validate(schema: JsonSchema, value: unknown, context: string): void {
   }
   if (schema.type === "array") {
     if (!Array.isArray(value)) fail(context, "must be array");
+    if (schema.minItems !== undefined && value.length < schema.minItems) fail(context, "shorter than minItems");
+    if (schema.maxItems !== undefined && value.length > schema.maxItems) fail(context, "longer than maxItems");
     for (const [index, item] of value.entries()) validate(schema.items as JsonSchema, item, `${context}[${index}]`);
     return;
   }
@@ -217,6 +237,7 @@ export async function executeTool(
   origin: string,
   dispatch: (request: Request) => Response | Promise<Response> = fetch,
 ): Promise<Response> {
+  if (tool.operation.requiresApproval) throw new Error("approval-managed writes cannot use direct dispatch");
   const request = buildRequest(tool, input, origin);
   return dispatch(request);
 }

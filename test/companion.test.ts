@@ -68,4 +68,26 @@ describe("WebMCP companion", () => {
     expect(dispatched).toHaveLength(0);
     expect(await value.handle(new Request("https://consumer.test/other"))).toBeUndefined();
   });
+
+  test("routes generated writes only through approval preparation", async () => {
+    const writeDocument: OpenApiDocument = { openapi: "3.1.0", paths: { "/messages": { post: {
+      operationId: "send_message",
+      "x-webmcp-enabled": true,
+      "x-webmcp-approval-required": true,
+      requestBody: { content: { "application/json": { schema: { type: "object", additionalProperties: false, required: ["text"], properties: { text: { type: "string" } } } } } },
+    } } } };
+    expect(() => createWebMcpCompanion({ document: writeDocument, renderPage: () => new Response(), dispatch: () => Response.json({}) })).toThrow("require prepareWrite");
+    let reads = 0;
+    let preparations = 0;
+    const value = createWebMcpCompanion({
+      document: writeDocument,
+      renderPage: () => new Response(),
+      dispatch: () => { reads += 1; return Response.json({}); },
+      prepareWrite: (request) => { preparations += 1; return Response.json({ pending: new URL(request.url).pathname }, { status: 202 }); },
+    });
+    const response = await value.handle(new Request("https://consumer.test/__mulder/call/send_message", { method: "POST", body: JSON.stringify({ body: { text: "hello" } }) }));
+    expect(response?.status).toBe(202);
+    expect(reads).toBe(0);
+    expect(preparations).toBe(1);
+  });
 });

@@ -1,0 +1,61 @@
+.hero-current {
+  padding-bottom: 5rem;
+}
+
+.hero-current h1 {
+  max-width: 1080px;
+  font-size: clamp(3.5rem, 7.2vw, 7rem);
+  line-height: 0.93;
+}
+
+.trace-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.15fr;
+  gap: 1rem;
+  margin-top: 4.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.trace-grid > div {
+  min-width: 0;
+}
+
+.trace-grid .code-block {
+  height: calc(100% - 1.75rem);
+  margin-top: 0.65rem;
+}
+
+.trace-grid pre {
+  min-height: 8.5rem;
+}
+
+.trace-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.section-actions {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 820px) {
+  .hero-current {
+    padding-bottom: 3rem;
+  }
+
+  .hero-current h1 {
+    font-size: clamp(2.75rem, 13vw, 4.5rem);
+  }
+
+  .trace-grid {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+
+  .trace-grid pre {
+    min-height: auto;
+  }
+}

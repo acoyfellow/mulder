@@ -1,10 +1,11 @@
 import { webMcpBootstrapModule } from "./bootstrap";
-import { executeTool, generateTools, type GeneratedTool, type OpenApiDocument } from "./openapi";
+import { buildRequest, executeTool, generateTools, type GeneratedTool, type OpenApiDocument } from "./openapi";
 
 export type WebMcpCompanionOptions = {
   document: OpenApiDocument;
   renderPage: () => Response | Promise<Response>;
   dispatch: (request: Request, tool: GeneratedTool) => Response | Promise<Response>;
+  prepareWrite?: (request: Request, tool: GeneratedTool, input: Record<string, unknown>) => Response | Promise<Response>;
   basePath?: string;
   resultSelector?: string;
   maxInputBytes?: number;
@@ -40,6 +41,7 @@ export function injectWebMcpBootstrap(response: Response, bootstrapPath: string)
 export function createWebMcpCompanion(options: WebMcpCompanionOptions): WebMcpCompanion {
   const tools = generateTools(options.document);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
+  if (tools.some((tool) => tool.operation.requiresApproval) && !options.prepareWrite) throw new Error("approval-managed tools require prepareWrite");
   const basePath = normalizeBasePath(options.basePath ?? "/__mulder");
   const callPrefix = `${basePath}/call/`;
   const bootstrapPath = `${basePath}/bootstrap.js`;
@@ -71,6 +73,10 @@ export function createWebMcpCompanion(options: WebMcpCompanionOptions): WebMcpCo
         return Response.json({ error: "bad_input" }, { status: 400 });
       }
       try {
+        if (tool.operation.requiresApproval) {
+          const outbound = buildRequest(tool, input, url.origin);
+          return await options.prepareWrite?.(outbound, tool, input) ?? Response.json({ error: "approval_required" }, { status: 409 });
+        }
         return await executeTool(tool, input, url.origin, (outbound) => options.dispatch(outbound, tool));
       } catch (error) {
         return Response.json({ error: error instanceof Error ? error.message : "bad_input" }, { status: 400 });
